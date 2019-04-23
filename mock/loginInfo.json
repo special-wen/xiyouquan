@@ -1,0 +1,12 @@
+{
+  "ok":1,
+  "data":{
+    "user_info":{
+      "uid":"000001",
+      "screen_name":"special",
+      "user_header_img":"https://avatar.csdn.net/5/E/2/3_wen_special.jpg",
+      "user_tel_num":"15510216093",
+      "user_email":"111@163.com"
+    }
+  }
+}

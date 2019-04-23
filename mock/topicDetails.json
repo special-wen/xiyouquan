@@ -1,0 +1,196 @@
+{
+  "ok":1,
+  "data":{
+    "topic_details":{
+      "card_type":0,
+      "card_type_name":"",
+      "hot_topic":{
+        "topic_id":"4360555349373336",
+        "edit_at":"20小时前",
+        "text":"【“西安奔驰维权事件”主角发声：没有得到任何回复，很失望！】前段时间，吴女士在西安利之星汽车有限公司花66万买了一辆奔驰汽车，然而在她签单提车5分钟还未出店时，发动机竟出现了漏油现象，而店方给出的答复是三包范围内，可更换发动机。此事在网上发酵后，引起大家热议。如今，虽然该4S店表",
+        "user_info":{
+          "uid":3948713130,
+          "user_header_img":"https://ww4.sinaimg.cn/orj480/61e7f8b0jw8eswr7csaddj205005074c.jpg",
+          "screen_name":"新浪电视"
+        },
+        "share_count":1234,
+        "comment_count":8617,
+        "like_count":314,
+        "scream":"",
+        "pics": [
+          {
+            "pid": "6b6e567cgy1g0m75gd6jtj20hs0m8jvt",
+            "url": "https://wx1.sinaimg.cn/orj360/6b6e567cgy1g0m75gd6jtj20hs0m8jvt.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 450,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx1.sinaimg.cn/large/6b6e567cgy1g0m75gd6jtj20hs0m8jvt.jpg",
+              "geo": {
+                "width": "640",
+                "height": "800",
+                "croped": false
+              }
+            }
+          },
+          {
+            "pid": "6b6e567cgy1g0m75g358wj20hs0m8n03",
+            "url": "https://wx2.sinaimg.cn/orj360/6b6e567cgy1g0m75g358wj20hs0m8n03.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 450,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx2.sinaimg.cn/large/6b6e567cgy1g0m75g358wj20hs0m8n03.jpg",
+              "geo": {
+                "width": "640",
+                "height": "800",
+                "croped": false
+              }
+            }
+          },
+          {
+            "pid": "6b6e567cgy1g0m75g9ujfj20hs0m8q7e",
+            "url": "https://wx1.sinaimg.cn/orj360/6b6e567cgy1g0m75g9ujfj20hs0m8q7e.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 450,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx1.sinaimg.cn/large/6b6e567cgy1g0m75g9ujfj20hs0m8q7e.jpg",
+              "geo": {
+                "width": "640",
+                "height": "800",
+                "croped": false
+              }
+            }
+          },
+          {
+            "pid": "6b6e567cgy1g0m75g8wcqj20hs0m8gp4",
+            "url": "https://wx1.sinaimg.cn/orj360/6b6e567cgy1g0m75g8wcqj20hs0m8gp4.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 450,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx1.sinaimg.cn/large/6b6e567cgy1g0m75g8wcqj20hs0m8gp4.jpg",
+              "geo": {
+                "width": "640",
+                "height": "800",
+                "croped": false
+              }
+            }
+          },
+          {
+            "pid": "6b6e567cgy1g0m75g67qij20hs0m70ws",
+            "url": "https://wx1.sinaimg.cn/orj360/6b6e567cgy1g0m75g67qij20hs0m70ws.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 449,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx1.sinaimg.cn/large/6b6e567cgy1g0m75g67qij20hs0m70ws.jpg",
+              "geo": {
+                "width": "640",
+                "height": "799",
+                "croped": false
+              }
+            }
+          },
+          {
+            "pid": "6b6e567cgy1g0m75g8pgaj20hs0m8juz",
+            "url": "https://wx4.sinaimg.cn/orj360/6b6e567cgy1g0m75g8pgaj20hs0m8juz.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 450,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx4.sinaimg.cn/large/6b6e567cgy1g0m75g8pgaj20hs0m8juz.jpg",
+              "geo": {
+                "width": "640",
+                "height": "800",
+                "croped": false
+              }
+            }
+          },
+          {
+            "pid": "6b6e567cgy1g0m75g5xd0j20hs0m8q5w",
+            "url": "https://wx2.sinaimg.cn/orj360/6b6e567cgy1g0m75g5xd0j20hs0m8q5w.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 450,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx2.sinaimg.cn/large/6b6e567cgy1g0m75g5xd0j20hs0m8q5w.jpg",
+              "geo": {
+                "width": "640",
+                "height": "800",
+                "croped": false
+              }
+            }
+          },
+          {
+            "pid": "6b6e567cgy1g0m75g9r4wj20hs0m8tck",
+            "url": "https://wx3.sinaimg.cn/orj360/6b6e567cgy1g0m75g9r4wj20hs0m8tck.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 450,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx3.sinaimg.cn/large/6b6e567cgy1g0m75g9r4wj20hs0m8tck.jpg",
+              "geo": {
+                "width": "640",
+                "height": "800",
+                "croped": false
+              }
+            }
+          },
+          {
+            "pid": "6b6e567cgy1g0m75g9bocj20hs0m8dj5",
+            "url": "https://wx2.sinaimg.cn/orj360/6b6e567cgy1g0m75g9bocj20hs0m8dj5.jpg",
+            "size": "orj360",
+            "geo": {
+              "width": 360,
+              "height": 450,
+              "croped": false
+            },
+            "large": {
+              "size": "large",
+              "url": "https://wx2.sinaimg.cn/large/6b6e567cgy1g0m75g9bocj20hs0m8dj5.jpg",
+              "geo": {
+                "width": "640",
+                "height": "800",
+                "croped": false
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
