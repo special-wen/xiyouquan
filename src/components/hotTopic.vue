@@ -30,8 +30,8 @@
               }"
               v-if="item.hot_topic.pics && item.hot_topic.pics.length > 0"
             >
-              <li v-for="(item, index) in item.hot_topic.pics" :key="index">
-                <img class="topic_img" :src="item.url" />
+              <li v-for="(pic, index) in item.hot_topic.pics" :key="index">
+                <img class="topic_img" :src="pic.url" />
               </li>
             </ul>
           </div>
@@ -67,7 +67,6 @@ export default {
       .then(res => {
         if (res.data && res.data.ok && res.data.ok === 1) {
           this.hotList = res.data.data.cards;
-          console.log(this.hotList);
         }
       })
       .catch(error => {
@@ -83,19 +82,32 @@ export default {
     },
     isLiked(index, ev) {
       ev.cancelBubble = true;
-      let new_const = 0;
+      const topic_id = this.hotList[index].hot_topic.topic_id;
       if (!this.isLike) {
-        this.isLike = true;
-        new_const = this.hotList[index].hot_topic.like_count++;
+        this.axios
+          .post("/api/create", {
+            topic_id: topic_id,
+            attitude: "heart"
+          })
+          .then(res => {
+            if (res.data.ok === 1) {
+              this.isLike = true;
+              this.hotList[index].hot_topic.like_count++;
+            }
+          });
       } else {
-        this.isLike = false;
-        new_const = this.hotList[index].hot_topic.like_count--;
+        this.axios
+          .post("/api/destory", {
+            topic_id: topic_id,
+            attitude: "heart"
+          })
+          .then(res => {
+            if (res.data.ok === 1) {
+              this.isLike = false;
+              this.hotList[index].hot_topic.like_count--;
+            }
+          });
       }
-      this.axios
-        .post("http://localhost:8080/api/likeCount", { new_const: new_const })
-        .then(res => {
-          console.log(res);
-        });
     }
   }
 };

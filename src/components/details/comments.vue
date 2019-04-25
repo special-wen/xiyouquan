@@ -50,7 +50,7 @@
                   v-html="item.like_count"
                   @click="isLikedFun(index)"
                 ></i>
-                <i class="el-icon-edit"></i>
+                <i class="el-icon-edit" @click="twoLevelComment(index)"></i>
               </div>
             </div>
           </div>
@@ -64,15 +64,25 @@ export default {
   name: "comments",
   data() {
     return {
-      commentsInfo: []
+      commentsInfo: [],
+      comment: {}
     };
   },
+  props: ["commentRes"],
   created() {
     this.getCommentsInfo();
   },
   computed: {
     topic_id() {
       return this.$route.params.topic_id;
+    }
+  },
+  watch: {
+    // eslint-disable-next-line no-unused-vars
+    commentRes(newVal, oldVal) {
+      // this.comment = newVal;
+      console.log(newVal);
+      this.commentsInfo.unshift(newVal);
     }
   },
   methods: {
@@ -84,20 +94,47 @@ export default {
         .then(res => {
           if (res.data.ok && res.data.ok === 1) {
             this.commentsInfo = res.data.data.data;
+            console.log(this.commentsInfo);
           }
         });
     },
+    // 某条评论的点赞量
     isLikedFun(index) {
-      console.log(index);
-      console.log(this.commentsInfo[index], "===");
+      console.log(this.commentsInfo[index]);
+      let c_id = this.commentsInfo[index].cid;
       if (this.commentsInfo[index].liked) {
-        this.commentsInfo[index].liked = false;
         this.axios
-          .post("/api/likes/destory", { id: this.topic_id })
-          .then(res => {});
+          .post("/api/destory", { c_id: c_id, type: "comment" })
+          .then(res => {
+            if (res.data.ok === 1) {
+              this.commentsInfo[index].liked = false;
+              this.commentsInfo[index].like_count--;
+            }
+          });
       } else {
-        this.commentsInfo[index].liked = true;
+        this.axios
+          .post("/api/update", { c_id: c_id, type: "comment" })
+          .then(res => {
+            if (res.data.ok === 1) {
+              this.commentsInfo[index].liked = true;
+              this.commentsInfo[index].like_count++;
+            }
+          });
       }
+    },
+    // 二级评论跳转页面
+    twoLevelComment(index) {
+      let c_id = this.commentsInfo[index].cid;
+      let name = this.commentsInfo[index].user.screen_name;
+      console.log(c_id);
+      this.$router.push({
+        path: `/comments/reply`,
+        query: {
+          topic_id: this.topic_id,
+          c_id: c_id,
+          reply_name: name
+        }
+      });
     }
   }
 };

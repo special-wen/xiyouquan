@@ -32,6 +32,13 @@ export default new Router({
       meta: {
         keepAlive: false
       }
+    },
+    {
+      path: "/comments/reply",
+      name: "commentReply",
+      meta: {
+        keepAlive: true
+      }
     }
   ]
 });

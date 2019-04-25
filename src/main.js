@@ -9,7 +9,7 @@ import "./plugins/element.js";
 Vue.config.productionTip = false;
 Vue.prototype.axios = axios;
 Vue.use(filters);
-axios.defaults.baseURL = "http://localhost:3000";
+// axios.defaults.baseURL = "http://localhost:3000";
 new Vue({
   router,
   store,

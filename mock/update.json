@@ -1,0 +1,14 @@
+{
+  "ok":1,
+  "data":{
+    "activitie_id": 4364970479159871,
+    "object_id": "4364596917810279",
+    "user":{
+      "uid":"000001",
+      "screen_name":"special",
+      "user_header_img":"http://tvax4.sinaimg.cn/crop.0.0.996.996.1024/007GdQNLly8g171bzcax6j30ro0ro0wu.jpg",
+      "user_tel_num":"15510216093",
+      "user_email":"111@163.com"
+    }
+  }
+}

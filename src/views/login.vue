@@ -152,7 +152,7 @@ export default {
         password: this.loginUserInfo.login_password
       };
       this.axios
-        .post("/login", params)
+        .post("/api/loginInfo", params)
         .then(res => {
           if (res.data && res.data.ok && res.data.ok === 1) {
             this.setUserLoginInfo(res.data.data.user_info);

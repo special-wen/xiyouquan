@@ -56,8 +56,35 @@
       </div>
     </div>
     <share v-if="clickIndex === 0"></share>
-    <comments v-if="clickIndex === 1"></comments>
+    <comments v-if="clickIndex === 1" :commentRes="coment_res"></comments>
     <like v-if="clickIndex === 2"></like>
+    <div class="create_comment">
+      <div @click="changeAction">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 4 }"
+          placeholder="发表评论"
+          v-model="comment"
+          class="comment_input"
+        >
+        </el-input>
+      </div>
+
+      <div v-if="type === 0" class="icons">
+        <div class="like_icons">
+          <i class="el-icon-share"></i>
+          <i
+            :class="liked ? 'el-icon-star-on' : 'el-icon-star-off'"
+            @click="isLikedFun()"
+          ></i>
+        </div>
+      </div>
+      <div v-else-if="type === 1" class="comments_but">
+        <el-button type="primary" size="small" @click="createComment()"
+          >发送</el-button
+        >
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -88,7 +115,12 @@ export default {
           tag: "赞"
         }
       ],
-      clickIndex: 1
+      clickIndex: 1,
+      comment: "",
+      type: 0, //0:所有图标 1：发送
+      topic_id: 0,
+      liked: false,
+      coment_res: {}
     };
   },
   computed: {},
@@ -96,13 +128,14 @@ export default {
     this.initTopicDetails();
   },
   methods: {
+    // 判断用户是否是登录状态！！！！！！！！不是：点击发送后，跳转登录/注册页面！！！！
     // 初始化
     initTopicDetails() {
-      const topic_id = this.$route.params.topic_id;
-      console.log(topic_id);
+      this.topic_id = this.$route.params.topic_id;
+      console.log(this.topic_id);
       this.axios
         .get("/api/topicDetails", {
-          params: { topic_id: topic_id }
+          params: { topic_id: this.topic_id }
         })
         .then(res => {
           if (res.data && res.data.ok && res.data.ok === 1) {
@@ -124,6 +157,55 @@ export default {
     },
     re_tag(index) {
       this.clickIndex = index;
+    },
+    changeAction() {
+      if (this.type === 0) {
+        this.type = 1;
+      }
+    },
+    createComment() {
+      console.log(this.comment);
+      if (this.comment) {
+        this.axios
+          .get("/api/createComment", {
+            params: { comment: this.comment, topic_id: this.topic_id }
+          })
+          .then(res => {
+            if (res.data && res.data.ok === 1) {
+              this.$alert("评论成功", "评论", {
+                confirmButtonText: "确定"
+              });
+              this.coment_res = res.data.data;
+              this.comment = "";
+              this.type = 0;
+            }
+          });
+      }
+    },
+    isLikedFun() {
+      if (this.liked) {
+        this.axios
+          .post("/api/destory", {
+            topic_id: this.topic_id,
+            attitude: "heart"
+          })
+          .then(res => {
+            if (res.data.ok === 1) {
+              this.liked = false;
+            }
+          });
+      } else {
+        this.axios
+          .post("/api/create", {
+            topic_id: this.topic_id,
+            attitude: "heart"
+          })
+          .then(res => {
+            if (res.data.ok === 1) {
+              this.liked = true;
+            }
+          });
+      }
     }
   }
 };
@@ -131,6 +213,7 @@ export default {
 <style>
 .details_list {
   background: #ffffff;
+  padding: 0 13px;
 }
 .details_icon {
   background: #ffffff;
@@ -157,5 +240,34 @@ export default {
 }
 .tag_active {
   color: #697480 !important;
+}
+.comment_input {
+  height: 54px;
+  width: 750px !important;
+  position: fixed;
+  bottom: 0;
+}
+.create_comment {
+  position: relative;
+  height: 60px;
+  background: #ffffff;
+}
+.icons {
+  position: fixed;
+  bottom: 20px;
+  right: 314px;
+}
+.like_icons {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+}
+.like_icons i {
+  margin-left: 20px;
+}
+.comments_but {
+  position: fixed;
+  bottom: 10px;
+  right: 314px;
 }
 </style>
