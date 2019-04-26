@@ -58,37 +58,35 @@
     <share v-if="clickIndex === 0"></share>
     <comments v-if="clickIndex === 1" :commentRes="coment_res"></comments>
     <like v-if="clickIndex === 2"></like>
-    <div class="create_comment">
-      <div @click="changeAction">
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2, maxRows: 4 }"
-          placeholder="发表评论"
-          v-model="comment"
-          class="comment_input"
-        >
-        </el-input>
-      </div>
+    <div @click="changeAction" class="addComment">
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 2, maxRows: 4 }"
+        placeholder="发表评论"
+        v-model="comment"
+        class="comment_input"
+      >
+      </el-input>
+    </div>
 
-      <div v-if="type === 0" class="icons">
-        <div class="like_icons">
-          <i class="el-icon-share"></i>
-          <i
-            :class="liked ? 'el-icon-star-on' : 'el-icon-star-off'"
-            @click="isLikedFun()"
-          ></i>
-        </div>
+    <div v-if="type === 0" class="icons">
+      <div class="like_icons">
+        <i class="el-icon-share" @click="share"></i>
+        <i
+          :class="liked ? 'el-icon-star-on' : 'el-icon-star-off'"
+          @click="isLikedFun"
+        ></i>
       </div>
-      <div v-else-if="type === 1" class="comments_but">
-        <el-button type="primary" size="small" @click="createComment()"
-          >发送</el-button
-        >
-      </div>
+    </div>
+    <div v-else-if="type === 1" class="comments_but">
+      <el-button type="primary" size="small" @click="createComment()"
+        >发送</el-button
+      >
     </div>
   </div>
 </template>
 <script>
-import comments from "./comments";
+import comments from "../comments/CommentsList";
 import like from "./like";
 import share from "./share";
 export default {
@@ -123,7 +121,6 @@ export default {
       coment_res: {}
     };
   },
-  computed: {},
   created() {
     this.initTopicDetails();
   },
@@ -206,6 +203,15 @@ export default {
             }
           });
       }
+    },
+    share() {
+      this.topic_id = this.$route.params.topic_id;
+      this.$router.push({
+        path: `/compose/share`,
+        query: {
+          topic_id: this.topic_id
+        }
+      });
     }
   }
 };
@@ -240,6 +246,9 @@ export default {
 }
 .tag_active {
   color: #697480 !important;
+}
+.addComment {
+  height: 54px;
 }
 .comment_input {
   height: 54px;

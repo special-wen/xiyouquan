@@ -869,7 +869,8 @@
             "user":{
               "user_header_img":"https://tvax3.sinaimg.cn/crop.0.0.1242.1242.180/006DFV1Tly8fhfvh8qwsyj30yi0yiq69.jpg",
               "screen_name":"当天当地当空气",
-              "uid": 6083064769
+              "uid": 6083064769,
+              "like":false
             }
           },
           {

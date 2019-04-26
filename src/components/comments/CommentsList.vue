@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="commentCard">
     <ul v-if="commentsInfo && commentsInfo.length > 0">
       <li v-for="(item, index) in commentsInfo" :key="index" class="comm_list">
         <div class="comment_list">
@@ -128,7 +128,7 @@ export default {
       let name = this.commentsInfo[index].user.screen_name;
       console.log(c_id);
       this.$router.push({
-        path: `/comments/reply`,
+        path: `/compose/reply`,
         query: {
           topic_id: this.topic_id,
           c_id: c_id,
@@ -140,6 +140,9 @@ export default {
 };
 </script>
 <style>
+.commentCard {
+  min-height: 175px;
+}
 li {
   list-style: none;
 }

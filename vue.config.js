@@ -9,6 +9,9 @@ const createComment = require("./mock/createComment");
 const update = require("./mock/update"); //评论点赞
 const destory = require("./mock/destory");
 const create = require("./mock/create");
+const reply = require("./mock/reply");
+const shareList = require("./mock/shareList");
+const likeList = require("./mock/like");
 module.exports = {
   lintOnSave: true,
   runtimeCompiler: true,
@@ -48,6 +51,15 @@ module.exports = {
       });
       app.post("/api/create", (req, res) => {
         res.json(create);
+      });
+      app.post("/api/reply", (req, res) => {
+        res.json(reply);
+      });
+      app.get("/api/share", (req, res) => {
+        res.json(shareList);
+      });
+      app.get("/api/like", (req, res) => {
+        res.json(likeList);
       });
     }
   }

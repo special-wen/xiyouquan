@@ -3,6 +3,8 @@ import Router from "vue-router";
 import index from "./views/index.vue";
 import login from "./views/login.vue";
 import details from "./views/topicDetails";
+import commentReply from "./components/comments/CommentReply";
+import ShareCard from "./components/share/ShareCard";
 Vue.use(Router);
 
 export default new Router({
@@ -30,12 +32,21 @@ export default new Router({
       name: "details",
       component: details,
       meta: {
-        keepAlive: false
+        keepAlive: true
       }
     },
     {
-      path: "/comments/reply",
+      path: "/compose/reply",
       name: "commentReply",
+      component: commentReply,
+      meta: {
+        keepAlive: true
+      }
+    },
+    {
+      path: "/compose/share",
+      name: "shareCard",
+      component: ShareCard,
       meta: {
         keepAlive: true
       }

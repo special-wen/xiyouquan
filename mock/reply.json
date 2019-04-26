@@ -1,0 +1,17 @@
+{
+  "ok":1,
+  "data":{
+    "created_at": "Thu Apr 25 17:31:16 +0800 2019",
+    "id": "4365017262330536",
+    "cid": "4365017262330536",
+    "rootid": "4364367522248651",
+    "floor_number": 0,
+    "text":"test二级评论回复借口",
+    "user":{
+      "user_header_img":"https://tvax3.sinaimg.cn/crop.0.0.1242.1242.180/006DFV1Tly8fhfvh8qwsyj30yi0yiq69.jpg",
+      "screen_name":"当天当地当空气",
+      "uid": 6083064769,
+      "like":false
+    }
+  }
+}
