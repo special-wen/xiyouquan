@@ -32,6 +32,7 @@
   width: 750px;
   height: 100%;
   background: #ffffff;
+  margin: 0 auto;
 }
 .reply_top {
   height: 56px;

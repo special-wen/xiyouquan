@@ -1,0 +1,33 @@
+{
+  "ok":1,
+  "data":{
+    "childHotFlow": [
+      {
+        "create_at": "Tue Apr 16 12:39:01 +0800 2019",
+        "id": "4361682229302295",
+        "cid": "4361682229302295",
+        "rootid": "4361680496145528",
+        "text": "确实上市了！2018年12月份上市的",
+        "floor_number": 0,
+        "user":{
+          "uid":2374064752,
+          "user_header_img": "https://tva4.sinaimg.cn/crop.0.0.996.996.180/8d815a70jw8f809pea2mkj20ro0rpac8.jpg",
+          "screen_name": "小小汪是个大灰狼"
+        }
+      },
+      {
+        "created_at": "Tue Apr 16 18:05:18 +0800 2019",
+        "id": "4361764340418504",
+        "cid": "4361764340418504",
+        "rootid": "4361680496145528",
+        "text":"青岛现车，你要多少？还有优惠",
+        "floor_number": 0,
+        "user":{
+          "uid": 5054718013,
+          "screen_name":"RM大圣",
+          "user_header_img":"https://tvax1.sinaimg.cn/crop.0.0.750.750.180/005w553Tly8frpggn6jlnj30ku0kugm1.jpg"
+        }
+      }
+    ]
+  }
+}

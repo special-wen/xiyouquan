@@ -12,6 +12,9 @@ const create = require("./mock/create");
 const reply = require("./mock/reply");
 const shareList = require("./mock/shareList");
 const likeList = require("./mock/like");
+const share = require("./mock/share"); //转发时的信息
+const hotFlow = require("./mock/hotFlow.json");
+const childHotFlow = require("./mock/childHotFlow.json");
 module.exports = {
   lintOnSave: true,
   runtimeCompiler: true,
@@ -60,6 +63,15 @@ module.exports = {
       });
       app.get("/api/like", (req, res) => {
         res.json(likeList);
+      });
+      app.get("/api/shareCard", (req, res) => {
+        res.json(share);
+      });
+      app.get("/api/hotflow", (req, res) => {
+        res.json(hotFlow);
+      });
+      app.get("/api/hotFlowChild", (req, res) => {
+        res.json(childHotFlow);
       });
     }
   }

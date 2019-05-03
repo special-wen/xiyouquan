@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container_index">
     <div class="navbar">
       <div class="navbar_top">
         <img class="header_img" :src="header_img" alt="" />
@@ -92,7 +92,7 @@ export default {
 };
 </script>
 <style>
-.container {
+.container_index {
   width: 750px;
   background: #ffffff;
   margin: 0 auto;
@@ -160,6 +160,6 @@ export default {
   width: 108px;
   position: fixed;
   bottom: 10px;
-  left: 592px;
+  left: 494px;
 }
 </style>

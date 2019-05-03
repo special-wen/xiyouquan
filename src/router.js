@@ -4,7 +4,8 @@ import index from "./views/index.vue";
 import login from "./views/login.vue";
 import details from "./views/topicDetails";
 import commentReply from "./components/comments/CommentReply";
-import ShareCard from "./components/share/ShareCard";
+import shareCard from "./components/share/ShareCard";
+import moreComments from "./components/comments/moreComments";
 Vue.use(Router);
 
 export default new Router({
@@ -46,7 +47,15 @@ export default new Router({
     {
       path: "/compose/share",
       name: "shareCard",
-      component: ShareCard,
+      component: shareCard,
+      meta: {
+        keepAlive: true
+      }
+    },
+    {
+      path: "/compose/comments",
+      name: "moreComments",
+      component: moreComments,
       meta: {
         keepAlive: true
       }

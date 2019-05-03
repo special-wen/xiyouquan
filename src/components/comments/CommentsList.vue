@@ -33,7 +33,7 @@
                     <span class="more_message" v-html="more_item.text"></span>
                   </li>
                 </ul>
-                <div class="more_count">
+                <div class="more_count" @click="moreComments(item)">
                   <span>共{{ item.total_number }}条回复 ></span>
                   <div></div>
                 </div>
@@ -100,7 +100,6 @@ export default {
     },
     // 某条评论的点赞量
     isLikedFun(index) {
-      console.log(this.commentsInfo[index]);
       let c_id = this.commentsInfo[index].cid;
       if (this.commentsInfo[index].liked) {
         this.axios
@@ -122,7 +121,7 @@ export default {
           });
       }
     },
-    // 二级评论跳转页面
+    // 二级评论评论页面
     twoLevelComment(index) {
       let c_id = this.commentsInfo[index].cid;
       let name = this.commentsInfo[index].user.screen_name;
@@ -133,6 +132,16 @@ export default {
           topic_id: this.topic_id,
           c_id: c_id,
           reply_name: name
+        }
+      });
+    },
+    // 评论盖楼页面
+    moreComments(item) {
+      this.$router.push({
+        path: `/compose/comments/`,
+        query: {
+          topic_id: this.topic_id,
+          c_id: item.cid
         }
       });
     }

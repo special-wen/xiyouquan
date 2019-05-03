@@ -264,7 +264,7 @@ export default {
 .icons {
   position: fixed;
   bottom: 20px;
-  right: 314px;
+  right: 210px;
 }
 .like_icons {
   display: flex;
@@ -277,6 +277,6 @@ export default {
 .comments_but {
   position: fixed;
   bottom: 10px;
-  right: 314px;
+  right: 210px;
 }
 </style>

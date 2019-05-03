@@ -37,7 +37,11 @@
           </div>
         </div>
         <div class="info_icon">
-          <i class="el-icon-share" v-html="item.hot_topic.share_count"></i>
+          <i
+            @click="share(index, $event)"
+            class="el-icon-share"
+            v-html="item.hot_topic.share_count"
+          ></i>
           <i
             class="el-icon-edit-outline"
             v-html="item.hot_topic.comment_count"
@@ -108,6 +112,16 @@ export default {
             }
           });
       }
+    },
+    share(index, ev) {
+      ev.cancelBubble = true;
+      const topic_id = this.hotList[index].hot_topic.topic_id;
+      this.$router.push({
+        path: `/compose/share`,
+        query: {
+          topic_id: topic_id
+        }
+      });
     }
   }
 };
