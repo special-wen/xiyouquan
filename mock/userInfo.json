@@ -1,10 +1,14 @@
 {
   "ok":1,
   "data":{
-    "userInfo":{
-      "user_id":"000001",
-      "screen_name":"",
-      "profile_image_url":""
-    }
+    "user":{
+      "uid":7036837173,
+      "screen_name":"眯起眼睛睡觉",
+      "user_header_img":"https://tvax4.sinaimg.cn/crop.0.0.996.996.180/007GdQNLly8g171bzcax6j30ro0ro0wu.jpg",
+      "topic_count": 13
+    },
+    "topic":[
+      
+    ]
   }
 }

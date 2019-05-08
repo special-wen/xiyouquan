@@ -16,6 +16,7 @@
           },
           "share_count":1234,
           "comment_count":8617,
+          "like":false,
           "like_count":314,
           "scream":"",
           "pics": [
@@ -191,6 +192,7 @@
           "share_count":222,
           "comment_count":15344,
           "like_count":4231,
+          "like":false,
           "scream":"",
           "text": "【无水红烧肉】<br />先别急着说不爱吃肥肉，闭着眼睛吃一口，我保证你停不下来",
           "user_info":{
@@ -230,6 +232,7 @@
           "share_count":341,
           "comment_count":10237,
           "like_count":1450,
+          "like":false,
           "scream":"",
           "text":"「我覺得來到《歌手》對我來講是來到一個新世界吧」<br /><br />「我是帶著我的創作來到這個舞台的，我也希望我是唱著我的作品離開這個舞台，所以我把這樣的心情寫成了一首歌，我現在還可以很不帶偏見地覺得來這一趟非常非常值得」<br /><br />「再給我一次機會，我會比半年前更毫不猶豫地決定要來",
           "user_info":{
@@ -364,6 +367,7 @@
           "share_count":902,
           "comment_count":82961,
           "like_count":123,
+          "like":false,
           "scream":"",
           "text":"第一次站上比赛舞台 真的蛮紧张 这首歌源于我的一些灵感随记 所以取名叫《随想》希望你们听完之后 能往我的“意见箱”里随时投递小纸条",
           "user_info":{
@@ -442,6 +446,7 @@
           "share_count":231,
           "comment_count":82961,
           "like_count":332,
+          "like":false,
           "scream":"",
           "text":"哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或",
           "user_info":{

@@ -129,7 +129,6 @@ export default {
     // 初始化
     initTopicDetails() {
       this.topic_id = this.$route.params.topic_id;
-      console.log(this.topic_id);
       this.axios
         .get("/api/topicDetails", {
           params: { topic_id: this.topic_id }

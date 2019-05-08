@@ -3,12 +3,14 @@
   "data":{
     "childHotFlow": [
       {
-        "create_at": "Tue Apr 16 12:39:01 +0800 2019",
+        "created_at": "Tue Apr 16 12:39:01 +0800 2019",
         "id": "4361682229302295",
         "cid": "4361682229302295",
         "rootid": "4361680496145528",
         "text": "确实上市了！2018年12月份上市的",
         "floor_number": 0,
+        "like_count": 19,
+        "liked": true,
         "user":{
           "uid":2374064752,
           "user_header_img": "https://tva4.sinaimg.cn/crop.0.0.996.996.180/8d815a70jw8f809pea2mkj20ro0rpac8.jpg",
@@ -16,6 +18,8 @@
         }
       },
       {
+        "like_count": 19,
+        "liked": true,
         "created_at": "Tue Apr 16 18:05:18 +0800 2019",
         "id": "4361764340418504",
         "cid": "4361764340418504",

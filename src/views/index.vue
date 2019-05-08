@@ -2,12 +2,12 @@
   <div class="container_index">
     <div class="navbar">
       <div class="navbar_top">
-        <img class="header_img" :src="header_img" alt="" />
+        <img class="header_img" :src="user_header" />
         <el-input placeholder="请输入内容" v-model="input">
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-input>
         <i class="el-icon-message"></i>
-        <i class="el-icon-edit"></i>
+        <i class="el-icon-edit" @click="editTopic()"></i>
       </div>
       <div class="navbar_bottom">
         <span>西柚圈</span>
@@ -44,7 +44,9 @@ export default {
   data() {
     return {
       navbar: ["热门", "学习", "餐饮", "圈子"],
-      clickIndex: 0
+      clickIndex: 0,
+      isLogin: false,
+      userInfo: {}
     };
   },
   components: {
@@ -55,29 +57,18 @@ export default {
   },
   computed: {
     ...mapGetters(["getUserLoginInfo", "getHotWords"]),
-    header_img() {
-      if (this.getUserLoginInfo) {
-        return this.getUserLoginInfo.user_header_img;
-      }
-      return "https://avatar.csdn.net/C/1/C/3_xq_520.jpg";
-    },
-    uid() {
-      if (this.getUserLoginInfo) {
-        return this.getUserLoginInfo.user_id;
-      }
-      return "";
-    },
-    isLogin() {
-      if (this.getUserLoginInfo) {
-        return true;
-      }
-      return false;
-    },
     input() {
       return "大家都在搜 " + this.getHotWords;
+    },
+    user_header() {
+      if (this.userInfo && this.userInfo.user_header_img) {
+        return this.userInfo.user_header_img;
+      }
+      return "https://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
     }
   },
   created() {
+    this.initLoginInfo();
     this.setHotWords(this.uid);
   },
   methods: {
@@ -87,7 +78,30 @@ export default {
     },
     login() {
       this.$router.push({ path: "/login" });
+    },
+    editTopic() {
+      this.$router.push({ path: "/edit" });
+    },
+    // 判断用户是否登陆
+    initLoginInfo() {
+      this.axios.get("/api/config").then(res => {
+        if (res.data && res.data.ok === 1 && res.data.data.login) {
+          this.isLogin = true;
+          this.userInfo = res.data.data.user_info;
+        } else {
+          this.isLogin = false;
+        }
+      });
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    console.log(to.path);
+    if (to.path === "/login") {
+      from.meta.keepAlive = false;
+    } else {
+      from.meta.keepAlive = true;
+    }
+    next();
   }
 };
 </script>

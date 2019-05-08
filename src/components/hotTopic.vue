@@ -1,5 +1,11 @@
 <template>
-  <div class="hot_list">
+  <div
+    class="hot_list"
+    v-infinite-scroll="loadMore"
+    infinite-scroll-disabled="busy"
+    infinite-scroll-distance="10"
+  >
+    <div class="loading">加载中...</div>
     <ul v-if="hotList && hotList.length > 0">
       <li
         class="list"
@@ -9,7 +15,10 @@
       >
         <div class="info_list">
           <div class="user_info">
-            <img :src="item.hot_topic.user_info.user_header_img" />
+            <img
+              :src="item.hot_topic.user_info.user_header_img"
+              @click="profile(index, $event)"
+            />
             <div class="name_date">
               <p
                 class="user_name"
@@ -47,7 +56,9 @@
             v-html="item.hot_topic.comment_count"
           ></i>
           <i
-            :class="[isLike ? 'el-icon-star-on' : 'el-icon-star-off']"
+            :class="[
+              item.hot_topic.like ? 'el-icon-star-on' : 'el-icon-star-off'
+            ]"
             v-html="item.hot_topic.like_count"
             @click="isLiked(index, $event)"
           ></i>
@@ -62,22 +73,42 @@ export default {
   data() {
     return {
       hotList: [],
-      isLike: false
+      busy: false,
+      page: 0
     };
   },
-  created() {
-    this.axios
-      .get("http://localhost:8080/api/hotTopic")
-      .then(res => {
-        if (res.data && res.data.ok && res.data.ok === 1) {
-          this.hotList = res.data.data.cards;
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  },
+  created() {},
   methods: {
+    // 无限滚动
+    loadMore() {
+      this.busy = true;
+      //把busy置位true，这次请求结束前不再执行
+      setTimeout(() => {
+        this.page++;
+        this.initHotTopicList(true);
+        //调用获取数据接口，并且传入一个true，让axios方法指导是否需要拼接数组。
+      }, 500);
+    },
+    initHotTopicList(flag) {
+      var param = {
+        page: this.page
+      };
+      this.axios.get("/api/hotTopic", { params: param }).then(res => {
+        if (res.data && res.data.ok && res.data.ok === 1) {
+          if (flag) {
+            this.hotList = this.hotList.concat(res.data.data.cards);
+            if (res.data.data.count === 0) {
+              this.busy = true;
+            } else {
+              this.busy = false;
+            }
+          } else {
+            this.hotList = res.data.data.cards;
+            this.busy = false;
+          }
+        }
+      });
+    },
     goDetailed(index) {
       const topic_id = this.hotList[index].hot_topic.topic_id;
       this.$router.push({
@@ -87,7 +118,7 @@ export default {
     isLiked(index, ev) {
       ev.cancelBubble = true;
       const topic_id = this.hotList[index].hot_topic.topic_id;
-      if (!this.isLike) {
+      if (!this.hotList[index].hot_topic.like) {
         this.axios
           .post("/api/create", {
             topic_id: topic_id,
@@ -95,7 +126,7 @@ export default {
           })
           .then(res => {
             if (res.data.ok === 1) {
-              this.isLike = true;
+              this.hotList[index].hot_topic.like = true;
               this.hotList[index].hot_topic.like_count++;
             }
           });
@@ -107,7 +138,7 @@ export default {
           })
           .then(res => {
             if (res.data.ok === 1) {
-              this.isLike = false;
+              this.hotList[index].hot_topic.like = false;
               this.hotList[index].hot_topic.like_count--;
             }
           });
@@ -121,6 +152,13 @@ export default {
         query: {
           topic_id: topic_id
         }
+      });
+    },
+    profile(index, ev) {
+      ev.cancelBubble = true;
+      const user_id = this.hotList[index].hot_topic.user_info.uid;
+      this.$router.push({
+        path: `/profile/${user_id}`
       });
     }
   }

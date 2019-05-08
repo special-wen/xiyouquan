@@ -10,7 +10,7 @@
     <div class="input_form" v-if="type === 'login'">
       <el-input
         v-model="loginUserInfo.login_tel"
-        placeholder="手机号或邮箱"
+        placeholder="手机号"
         @input="formLoginChange()"
       ></el-input>
       <el-input
@@ -32,7 +32,7 @@
     <div class="input_form" v-else-if="type === 'sign'">
       <el-input
         v-model="singUserInfo.sign_tel"
-        placeholder="手机号或邮箱"
+        placeholder="手机号"
         @input="formSignChange()"
       ></el-input>
       <el-input
@@ -87,6 +87,7 @@ export default {
     ...mapActions(["setUserLoginInfo"]),
     sign() {
       this.type = "sign";
+      this.errorTips = "";
     },
     close() {
       this.$router.back(-1);
@@ -96,6 +97,7 @@ export default {
     },
     login() {
       this.type = "login";
+      this.errorTips = "";
     },
     // 监听登录表单数据
     formLoginChange() {
@@ -114,12 +116,11 @@ export default {
         }
       } else {
         this.tag = false;
-        this.errorTips = "请输入注册信息";
+        this.errorTips = "请输入登陆信息";
       }
     },
     // 监听注册表单数据
     formSignChange() {
-      console.log("---");
       if (
         this.singUserInfo.sign_tel &&
         this.singUserInfo.sign_password &&
@@ -147,16 +148,24 @@ export default {
     },
     // 登录
     loginAct() {
-      let params = {
-        username: this.loginUserInfo.login_tel,
-        password: this.loginUserInfo.login_password
-      };
       this.axios
-        .post("/api/loginInfo", params)
+        .post("/api/login", {
+          username: this.loginUserInfo.login_tel,
+          password: this.loginUserInfo.login_password
+        })
         .then(res => {
           if (res.data && res.data.ok && res.data.ok === 1) {
             this.setUserLoginInfo(res.data.data.user_info);
-            this.$router.push({ path: "/" });
+            this.$alert(res.data.data.msg, "登陆注册", {
+              confirmButtonText: "确定",
+              callback: () => {
+                this.$router.push({ path: "/" });
+              }
+            });
+          } else if (res.data && res.data.ok === 0) {
+            this.$alert(res.data.data.msg, "登陆注册", {
+              confirmButtonText: "确定"
+            });
           }
         })
         .catch(err => {
@@ -169,14 +178,21 @@ export default {
         username: this.singUserInfo.sign_tel,
         password: this.singUserInfo.sign_password
       };
-      this.axios
-        .post("http://localhost:8080/api/signInfo", params)
-        .then(res => {
-          if (res.data && res.data.ok && res.data.ok === 1) {
-            this.setUserLoginInfo(res.data.data.user_info);
-            this.$router.push({ path: "/" });
-          }
-        });
+      this.axios.post("/api/sign", params).then(res => {
+        if (res.data && res.data.ok && res.data.ok === 1) {
+          this.setUserLoginInfo(res.data.data.user_info);
+          this.$alert(res.data.data.msg, "登陆注册", {
+            confirmButtonText: "确定",
+            callback: () => {
+              this.$router.push({ path: "/" });
+            }
+          });
+        } else if (res.data && res.data.ok === 0) {
+          this.$alert(res.data.data.msg, "登陆注册", {
+            confirmButtonText: "确定"
+          });
+        }
+      });
     }
   }
 };

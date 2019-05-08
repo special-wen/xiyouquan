@@ -2,6 +2,8 @@ import Vue from "vue";
 import Router from "vue-router";
 import index from "./views/index.vue";
 import login from "./views/login.vue";
+import edit from "./views/editTopic.vue";
+import profile from "./views/profile.vue";
 import details from "./views/topicDetails";
 import commentReply from "./components/comments/CommentReply";
 import shareCard from "./components/share/ShareCard";
@@ -29,6 +31,14 @@ export default new Router({
       }
     },
     {
+      path: "/edit",
+      name: "edit",
+      component: edit,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
       path: "/topic/details/:topic_id",
       name: "details",
       component: details,
@@ -37,11 +47,19 @@ export default new Router({
       }
     },
     {
+      path: "/profile/:user_id",
+      name: "profile",
+      component: profile,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
       path: "/compose/reply",
       name: "commentReply",
       component: commentReply,
       meta: {
-        keepAlive: true
+        keepAlive: false
       }
     },
     {
@@ -49,7 +67,7 @@ export default new Router({
       name: "shareCard",
       component: shareCard,
       meta: {
-        keepAlive: true
+        keepAlive: false
       }
     },
     {

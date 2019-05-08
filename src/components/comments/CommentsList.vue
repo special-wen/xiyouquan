@@ -80,7 +80,6 @@ export default {
   watch: {
     // eslint-disable-next-line no-unused-vars
     commentRes(newVal, oldVal) {
-      // this.comment = newVal;
       console.log(newVal);
       this.commentsInfo.unshift(newVal);
     }
