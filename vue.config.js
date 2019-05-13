@@ -1,20 +1,20 @@
-const userInfo = require("./mock/userInfo.json");
-const loginInfo = require("./mock/loginInfo.json");
-const signInfo = require("./mock/signInfo.json");
-const hot = require("./mock/hot.json");
-const hotTopic = require("./mock/hotTopic.json");
-const topicDetails = require("./mock/topicDetails.json");
-const comments = require("./mock/comments.json");
-const createComment = require("./mock/createComment");
-const update = require("./mock/update"); //评论点赞
-const destory = require("./mock/destory");
-const create = require("./mock/create");
-const reply = require("./mock/reply");
-const shareList = require("./mock/shareList");
-const likeList = require("./mock/like");
-const share = require("./mock/share"); //转发时的信息
-const hotFlow = require("./mock/hotFlow.json");
-const childHotFlow = require("./mock/childHotFlow.json");
+// const userInfo = require("./mock/userInfo.json");
+// const loginInfo = require("./mock/loginInfo.json");
+// const signInfo = require("./mock/signInfo.json");
+// const hot = require("./mock/hot.json");
+// const hotTopic = require("./mock/hotTopic.json");
+// const topicDetails = require("./mock/topicDetails.json");
+// const comments = require("./mock/comments.json");
+// const createComment = require("./mock/createComment");
+// const update = require("./mock/update"); //评论点赞
+// const destory = require("./mock/destory");
+// const create = require("./mock/create");
+// const reply = require("./mock/reply");
+// const shareList = require("./mock/shareList");
+// const likeList = require("./mock/like");
+// const share = require("./mock/share"); //转发时的信息
+// const hotFlow = require("./mock/hotFlow.json");
+// const childHotFlow = require("./mock/childHotFlow.json");
 module.exports = {
   lintOnSave: true,
   runtimeCompiler: true,

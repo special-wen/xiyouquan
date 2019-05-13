@@ -159,7 +159,7 @@ export default {
             this.$alert(res.data.data.msg, "登陆注册", {
               confirmButtonText: "确定",
               callback: () => {
-                this.$router.push({ path: "/" });
+                this.$router.back(-1);
               }
             });
           } else if (res.data && res.data.ok === 0) {
@@ -184,7 +184,7 @@ export default {
           this.$alert(res.data.data.msg, "登陆注册", {
             confirmButtonText: "确定",
             callback: () => {
-              this.$router.push({ path: "/" });
+              this.$router.back(-1);
             }
           });
         } else if (res.data && res.data.ok === 0) {
@@ -206,7 +206,7 @@ export default {
   height: 615px;
 }
 .close_icon {
-  padding-top: 18.75px;
+  padding: 18.75px;
 }
 .el-icon-close {
   font-size: 30px;

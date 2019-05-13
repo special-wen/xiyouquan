@@ -2,7 +2,7 @@
   <div class="container">
     <div class="comment_reply">
       <div class="reply_top">
-        <i class="el-icon-arrow-left" @click="back"></i>
+        <i class="el-icon-arrow-left" @click="backPur"></i>
         <span class="reply">回复评论</span>
         <div class="reply_send">
           <el-button type="text" @click="sendReply">发送</el-button>
@@ -110,7 +110,7 @@ export default {
     }
   },
   methods: {
-    back() {
+    backPur() {
       this.$router.back(-1);
     },
     // 确认回复
@@ -119,27 +119,33 @@ export default {
         this.$alert("请输入回复评论内容", "回复评论", {
           confirmButtonText: "确定"
         });
+      } else {
+        let created_at = new Date().valueOf();
+        this.axios
+          .post("/api/reply", {
+            topic_id: this.topic_id,
+            c_id: this.comment_id,
+            content: this.reply,
+            created_at: created_at
+          })
+          .then(res => {
+            if (res.data.ok === 1) {
+              this.$alert("评论成功", "回复评论", {
+                confirmButtonText: "确定",
+                callback: () => {
+                  this.$router.back(-1);
+                }
+              });
+            } else if (res.data.ok === 0 && res.data.data.login === false) {
+              this.$alert(res.data.data.msg, "回复评论", {
+                confirmButtonText: "确定",
+                callback: () => {
+                  this.$router.push({ path: "/login" });
+                }
+              });
+            }
+          });
       }
-      this.axios
-        .post("/api/reply", {
-          topic_id: this.topic_id,
-          c_id: this.comment_id,
-          content: this.reply
-        })
-        .then(res => {
-          if (res.data.ok === 1) {
-            this.$alert("评论成功", "回复评论", {
-              confirmButtonText: "确定",
-              callback: () => {
-                this.$router.back(-1);
-              }
-            });
-          } else {
-            this.$alert("评论失败", "回复评论", {
-              confirmButtonText: "确定"
-            });
-          }
-        });
     }
   }
 };

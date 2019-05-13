@@ -3,30 +3,30 @@
     <div class="navbar">
       <div class="navbar_top">
         <img class="header_img" :src="user_header" />
-        <el-input placeholder="请输入内容" v-model="input">
+        <div class="navbar_bottom">
+          <span>西柚圈</span>
+          <ul class="navbar_list">
+            <li
+              v-for="(item, index) in navbar"
+              :key="index"
+              @click="showModule(index)"
+            >
+              <span v-html="item"></span>
+              <div :class="index === clickIndex ? 'active' : ''"></div>
+            </li>
+          </ul>
+        </div>
+        <!-- <el-input placeholder="请输入内容" v-model="input">
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
-        </el-input>
-        <i class="el-icon-message"></i>
+        </el-input> -->
+        <!-- <i class="el-icon-message"></i> -->
         <i class="el-icon-edit" @click="editTopic()"></i>
       </div>
-      <div class="navbar_bottom">
-        <span>西柚圈</span>
-        <ul class="navbar_list">
-          <li
-            v-for="(item, index) in navbar"
-            :key="index"
-            @click="showModule(index)"
-          >
-            <span v-html="item"></span>
-            <div :class="index === clickIndex ? 'active' : ''"></div>
-          </li>
-        </ul>
-      </div>
     </div>
-    <hot-topic v-if="clickIndex === 0"></hot-topic>
-    <study-topic v-if="clickIndex === 1"></study-topic>
-    <food-topic v-if="clickIndex === 2"></food-topic>
-    <friends-topic v-if="clickIndex === 3"></friends-topic>
+    <hot-topic v-if="clickIndex === 0" :isLogin="isLogin"></hot-topic>
+    <study-topic v-if="clickIndex === 1" :isLogin="isLogin"></study-topic>
+    <food-topic v-if="clickIndex === 2" :isLogin="isLogin"></food-topic>
+    <friends-topic v-if="clickIndex === 3" :isLogin="isLogin"></friends-topic>
     <div class="login_sign_btn" v-if="!isLogin">
       <el-button type="primary" round @click="login()">登录/注册</el-button>
     </div>
@@ -57,22 +57,22 @@ export default {
   },
   computed: {
     ...mapGetters(["getUserLoginInfo", "getHotWords"]),
-    input() {
-      return "大家都在搜 " + this.getHotWords;
-    },
+    // input() {
+    //   return "大家都在搜 " + this.getHotWords;
+    // },
     user_header() {
       if (this.userInfo && this.userInfo.user_header_img) {
         return this.userInfo.user_header_img;
       }
-      return "https://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
+      return "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
     }
   },
   created() {
     this.initLoginInfo();
-    this.setHotWords(this.uid);
+    // this.setHotWords(this.uid);
   },
   methods: {
-    ...mapActions(["setHotWords"]),
+    ...mapActions(["setHotWords", "setUserLoginInfo"]),
     showModule(index) {
       this.clickIndex = index;
     },
@@ -80,7 +80,18 @@ export default {
       this.$router.push({ path: "/login" });
     },
     editTopic() {
-      this.$router.push({ path: "/edit" });
+      if (!this.isLogin) {
+        this.$alert("请先登陆再进行其他操作", "", {
+          confirmButtonText: "确定",
+          callback: () => {
+            this.$router.push({
+              path: "/login"
+            });
+          }
+        });
+      } else {
+        this.$router.push({ path: "/edit" });
+      }
     },
     // 判断用户是否登陆
     initLoginInfo() {
@@ -88,20 +99,12 @@ export default {
         if (res.data && res.data.ok === 1 && res.data.data.login) {
           this.isLogin = true;
           this.userInfo = res.data.data.user_info;
+          this.setUserLoginInfo(this.userInfo);
         } else {
           this.isLogin = false;
         }
       });
     }
-  },
-  beforeRouteLeave(to, from, next) {
-    console.log(to.path);
-    if (to.path === "/login") {
-      from.meta.keepAlive = false;
-    } else {
-      from.meta.keepAlive = true;
-    }
-    next();
   }
 };
 </script>
@@ -158,7 +161,7 @@ export default {
   margin-left: 17px;
 }
 .navbar_list li {
-  margin: 0 50px;
+  margin: 0 35px;
 }
 .navbar_list li span {
   color: #a5adb5;

@@ -1,71 +1,201 @@
 <template>
-  <div class="hot_list">
-    <ul v-if="hotList && hotList.length > 0">
+  <div
+    class="hot_list"
+    v-infinite-scroll="loadMore"
+    infinite-scroll-disabled="busy"
+    infinite-scroll-distance="10"
+  >
+    <ul v-if="foodList && foodList.length > 0">
       <li
         class="list"
-        v-for="(item, index) in hotList"
+        v-for="(item, index) in foodList"
         :key="index"
         @click="goDetailed(index)"
       >
         <div class="info_list">
           <div class="user_info">
-            <img :src="item.hot_topic.user_info.user_header_img" />
+            <img
+              :src="card_imgURL(item.user_info.user_header_img)"
+              @click="profile(index, $event)"
+            />
             <div class="name_date">
-              <p
-                class="user_name"
-                v-html="item.hot_topic.user_info.screen_name"
-              ></p>
-              <p class="date" v-html="item.hot_topic.edit_at"></p>
+              <p class="user_name" v-html="item.user_info.screen_name"></p>
+              <p class="date">
+                {{
+                  item.food_topic.edit_at | commentDate(item.food_topic.edit_at)
+                }}
+              </p>
             </div>
           </div>
           <div class="hot_content">
-            <p v-html="item.hot_topic.text"></p>
+            <p v-html="item.food_topic.text"></p>
             <ul
               class="img_totle"
               :class="{
                 img_type_1:
-                  item.hot_topic.pics.length <= 3 ||
-                  item.hot_topic.pics.length >= 5,
-                img_type_2: item.hot_topic.pics.length === 4
+                  item.food_topic.pics.length <= 3 ||
+                  item.food_topic.pics.length >= 5,
+                img_type_2: item.food_topic.pics.length === 4
               }"
-              v-if="item.hot_topic.pics && item.hot_topic.pics.length > 0"
+              v-if="item.food_topic.pics && item.food_topic.pics.length > 0"
             >
-              <li v-for="(item, index) in item.hot_topic.pics" :key="index">
-                <img class="topic_img" :src="item.url" />
+              <li v-for="(pic, index) in item.food_topic.pics" :key="index">
+                <img class="topic_img" :src="pic" />
               </li>
             </ul>
           </div>
         </div>
+        <div class="info_icon">
+          <i
+            class="el-icon-edit-outline"
+            v-html="item.food_topic.comment_count"
+          ></i>
+          <i
+            :class="[
+              item.food_topic.like ? 'el-icon-star-on' : 'el-icon-star-off'
+            ]"
+            v-html="item.food_topic.like_count"
+            @click="isLiked(index, $event)"
+          ></i>
+        </div>
       </li>
     </ul>
+    <!-- <div class="loading" v-if="!busy || !foodList.length">加载中...</div> -->
+    <div
+      class="loading"
+      v-loading="!busy || !foodList.length"
+      element-loading-spinner="el-icon-loading"
+    ></div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
-  name: "foodTopic",
+  name: "hotTopic",
   data() {
     return {
-      hotList: []
+      foodList: [],
+      busy: false,
+      page: 0
     };
   },
-  created() {
-    this.axios
-      .get("http://localhost:8080/api/hotTopic")
-      .then(res => {
-        if (res.data && res.data.ok && res.data.ok === 1) {
-          this.hotList = res.data.data.cards;
-          console.log(this.hotList);
+  props: ["isLogin"],
+  computed: {
+    ...mapGetters(["getUserLoginInfo"]),
+    // 判断头像显示，是否是默认头像
+    card_imgURL() {
+      return function(url) {
+        if (url === "") {
+          return "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
         }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+        return url;
+      };
+    },
+    uid() {
+      if (this.getUserLoginInfo) {
+        return this.getUserLoginInfo.uid;
+      }
+      return "";
+    }
   },
   methods: {
+    // 无限滚动
+    loadMore() {
+      this.busy = true;
+      //把busy置位true，这次请求结束前不再执行
+      setTimeout(() => {
+        this.page++;
+        this.initFoodTopicList(true);
+        //调用获取数据接口，并且传入一个true，让axios方法指导是否需要拼接数组。
+      }, 500);
+    },
+    initFoodTopicList(flag) {
+      var param = {
+        page: this.page
+      };
+      this.axios.get("/api/foodTopic", { params: param }).then(res => {
+        if (res.data && res.data.ok && res.data.ok === 1) {
+          if (flag) {
+            this.foodList = this.foodList.concat(res.data.data.card);
+            if (res.data.data.count === 0) {
+              this.busy = true;
+            } else {
+              this.busy = false;
+            }
+          } else {
+            this.foodList = res.data.data.card;
+            this.busy = false;
+          }
+        }
+      });
+    },
+
+    // 跳转话题的详情页面，不设置权限
     goDetailed(index) {
-      const uid = this.hotList[index].hot_topic.user_info.uid;
+      const topic_id = this.foodList[index].food_topic.topic_id;
       this.$router.push({
-        path: `/topic/details/${uid}`
+        path: `/topic/details/${topic_id}`
+      });
+    },
+
+    //未登陆公用方法
+    loginAlert() {
+      this.$alert("请先登陆再进行其他操作", "", {
+        confirmButtonText: "确定",
+        callback: () => {
+          this.$router.push({
+            path: "/login"
+          });
+        }
+      });
+    },
+
+    //  点赞功能
+    isLiked(index, ev) {
+      ev.cancelBubble = true;
+      // 如果用户没有登陆，跳登陆页面
+      if (this.uid === "" && !this.isLogin) {
+        this.loginAlert();
+      } else {
+        const topic_id = this.foodList[index].food_topic.topic_id;
+        let created_at = new Date().valueOf();
+        if (!this.foodList[index].food_topic.like) {
+          this.axios
+            .post("/api/create", {
+              uid: this.uid,
+              topic_id: topic_id,
+              created_at: created_at,
+              attitude: "heart"
+            })
+            .then(res => {
+              if (res.data.ok === 1) {
+                this.foodList[index].food_topic.like = true;
+                this.foodList[index].food_topic.like_count++;
+              }
+            });
+        } else {
+          this.axios
+            .post("/api/destory", {
+              uid: this.uid,
+              topic_id: topic_id,
+              attitude: "heart"
+            })
+            .then(res => {
+              if (res.data.ok === 1) {
+                this.foodList[index].food_topic.like = false;
+                this.foodList[index].food_topic.like_count--;
+              }
+            });
+        }
+      }
+    },
+
+    // 别人的主页
+    profile(index, ev) {
+      ev.cancelBubble = true;
+      const user_id = this.studyList[index].user_info.uid;
+      this.$router.push({
+        path: `/profile/${user_id}`
       });
     }
   }
@@ -92,6 +222,17 @@ export default {
   flex-direction: row;
   align-items: center;
 }
+.info_icon {
+  width: 720px;
+  height: 22px;
+  margin: 0 1.2rem;
+  padding: 0rem 0.375rem 1rem 0;
+}
+.info_icon i {
+  margin-right: 60px;
+  font-size: 18px;
+  color: #939393;
+}
 .name_date {
   margin-left: 10px;
 }
@@ -103,11 +244,12 @@ export default {
   display: flex;
   display: -webkit-flex;
   flex-wrap: wrap;
+  padding-top: 10px;
 }
 .topic_img {
   width: 127px;
   height: 127px;
-  margin: 0 2px;
+  margin: 0px 2px;
 }
 .img_type_1 {
   width: 400px;

@@ -1,62 +1,83 @@
 <template>
   <div class="commentCard">
-    <ul v-if="commentsInfo && commentsInfo.length > 0">
-      <li v-for="(item, index) in commentsInfo" :key="index" class="comm_list">
-        <div class="comment_list">
-          <div class="img">
-            <img class="comments_image" :src="item.user.user_header_img" />
-          </div>
-          <!-- 评论者信息 -->
-          <div class="comments_information">
-            <div class="comments_name">
-              <span v-html="item.user.screen_name"></span>
+    <!-- <div v-if="commentsInfo.length === 0" class="noComments"> -->
+    <!-- <span>没有评论，快来占沙发吧～</span> -->
+    <!-- </div> -->
+    <div
+      v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="busy"
+      infinite-scroll-distance="10"
+    >
+      <ul>
+        <li
+          v-for="(item, index) in commentsInfo"
+          :key="index"
+          class="comm_list"
+        >
+          <div class="comment_list">
+            <div class="img">
+              <img
+                class="comments_image"
+                :src="header_img(item.user_info.user_header_img)"
+              />
             </div>
-            <div class="comments_mess">
-              <span v-html="item.text"></span>
-            </div>
-            <!-- 附加评论 -->
-            <div class="more_mess" v-if="item.comments">
-              <div class="more_content">
-                <ul
-                  class="above"
-                  v-if="item.comments && item.comments.length > 0"
-                >
-                  <li
-                    v-for="(more_item, key) in item.comments"
-                    :key="key"
-                    class="more_content"
+            <!-- 评论者信息 -->
+            <div class="comments_information">
+              <div class="comments_name">
+                <span v-html="item.user_info.user_screen_name"></span>
+              </div>
+              <div class="comments_mess">
+                <span v-html="item.comment.text"></span>
+              </div>
+              <!-- 附加评论 -->
+              <div class="more_mess" v-if="item.comment.flow_comment_info">
+                <div class="more_content">
+                  <ul
+                    class="above"
+                    v-if="
+                      item.comment.flow_comment_info &&
+                        item.comment.flow_comment_info.length > 0
+                    "
                   >
+                    <li
+                      v-for="(more_item, key) in item.comment.flow_comment_info"
+                      :key="key"
+                      class="more_content"
+                    >
+                      <span
+                        class="more_name"
+                        v-html="more_item.screen_name + `:`"
+                      ></span>
+                      <span class="more_message" v-html="more_item.text"></span>
+                    </li>
+                  </ul>
+                  <div class="more_count" @click="moreComments(item)">
                     <span
-                      class="more_name"
-                      v-html="more_item.user.screen_name + `:`"
+                      v-html="`共 ` + item.comment.flow_count + ` 条回复>`"
                     ></span>
-                    <span class="more_message" v-html="more_item.text"></span>
-                  </li>
-                </ul>
-                <div class="more_count" @click="moreComments(item)">
-                  <span>共{{ item.total_number }}条回复 ></span>
-                  <div></div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+              <!-- 其他信息 -->
+              <div class="other_mess">
+                <span class="create_date">{{
+                  item.comment.created_at | commentDate(item.comment.created_at)
+                }}</span>
+                <div class="like_icon">
+                  <i class="el-icon-edit" @click="twoLevelComment(index)"></i>
                 </div>
               </div>
             </div>
-            <!-- 其他信息 -->
-            <div class="other_mess">
-              <span class="create_date">{{
-                item.created_at | commentDate(item.created_at)
-              }}</span>
-              <div class="like_icon">
-                <i
-                  :class="item.liked ? 'el-icon-star-on' : 'el-icon-star-off'"
-                  v-html="item.like_count"
-                  @click="isLikedFun(index)"
-                ></i>
-                <i class="el-icon-edit" @click="twoLevelComment(index)"></i>
-              </div>
-            </div>
           </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+      <div
+        class="loading"
+        v-loading="!busy || request"
+        element-loading-spinner="el-icon-loading"
+      ></div>
+    </div>
   </div>
 </template>
 <script>
@@ -65,66 +86,74 @@ export default {
   data() {
     return {
       commentsInfo: [],
-      comment: {}
+      comment: {},
+      busy: false,
+      page: 0,
+      request: true
     };
   },
   props: ["commentRes"],
-  created() {
-    this.getCommentsInfo();
-  },
   computed: {
     topic_id() {
       return this.$route.params.topic_id;
+    },
+    header_img() {
+      return function(item) {
+        if (item) {
+          return item;
+        }
+        return "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
+      };
     }
   },
   watch: {
     // eslint-disable-next-line no-unused-vars
     commentRes(newVal, oldVal) {
       console.log(newVal);
-      this.commentsInfo.unshift(newVal);
+      this.commentsInfo.unshift(newVal.comment_info);
     }
   },
   methods: {
-    getCommentsInfo() {
+    loadMore() {
+      this.busy = true;
+      //把busy置位true，这次请求结束前不再执行
+      setTimeout(() => {
+        this.page++;
+        this.getCommentsInfo(true);
+        //调用获取数据接口，并且传入一个true，让axios方法指导是否需要拼接数组。
+      }, 500);
+    },
+
+    //获取评论列表中的评论
+    getCommentsInfo(flag) {
+      this.request = true;
       this.axios
-        .get("http://localhost:8080/api/comments", {
-          params: { topic_id: this.topic_id }
+        .get("/api/comments", {
+          params: { topic_id: this.topic_id, page: this.page }
         })
         .then(res => {
+          // this.request = false;
           if (res.data.ok && res.data.ok === 1) {
-            this.commentsInfo = res.data.data.data;
-            console.log(this.commentsInfo);
+            if (flag) {
+              this.commentsInfo = this.commentsInfo.concat(
+                res.data.data.comment_info
+              );
+              if (res.data.count === 0) {
+                this.busy = true;
+              } else {
+                this.busy = false;
+              }
+            } else {
+              this.commentsInfo = res.data.data.comment_info;
+              this.busy = false;
+            }
           }
         });
     },
-    // 某条评论的点赞量
-    isLikedFun(index) {
-      let c_id = this.commentsInfo[index].cid;
-      if (this.commentsInfo[index].liked) {
-        this.axios
-          .post("/api/destory", { c_id: c_id, type: "comment" })
-          .then(res => {
-            if (res.data.ok === 1) {
-              this.commentsInfo[index].liked = false;
-              this.commentsInfo[index].like_count--;
-            }
-          });
-      } else {
-        this.axios
-          .post("/api/update", { c_id: c_id, type: "comment" })
-          .then(res => {
-            if (res.data.ok === 1) {
-              this.commentsInfo[index].liked = true;
-              this.commentsInfo[index].like_count++;
-            }
-          });
-      }
-    },
     // 二级评论评论页面
     twoLevelComment(index) {
-      let c_id = this.commentsInfo[index].cid;
-      let name = this.commentsInfo[index].user.screen_name;
-      console.log(c_id);
+      let c_id = this.commentsInfo[index].comment.cid;
+      let name = this.commentsInfo[index].user_info.user_screen_name;
       this.$router.push({
         path: `/compose/reply`,
         query: {
@@ -136,11 +165,12 @@ export default {
     },
     // 评论盖楼页面
     moreComments(item) {
+      console.log(item);
       this.$router.push({
         path: `/compose/comments/`,
         query: {
           topic_id: this.topic_id,
-          c_id: item.cid
+          c_id: item.comment.cid
         }
       });
     }
@@ -148,8 +178,13 @@ export default {
 };
 </script>
 <style>
-.commentCard {
-  min-height: 175px;
+.noComments {
+  background: #ffffff;
+  margin-top: 10px;
+  min-height: 135px;
+  padding-left: 13px;
+  padding-top: 13px;
+  color: #697480;
 }
 li {
   list-style: none;

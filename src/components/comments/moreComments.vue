@@ -3,21 +3,18 @@
     <div :class="$style.comments_flow_title" v-if="hotFlow">
       <i class="el-icon-arrow-left" :class="$style.back" @click="back"></i>
       <span
-        v-if="hotFlow.total_number"
         :class="$style.title"
-        v-html="hotFlow.total_number + `条回复`"
+        v-if="childHotFlow.length > 0"
+        v-html="childHotFlow.length + `条回复`"
       ></span>
     </div>
-    <div :class="$style.comments_root" v-if="hotFlow.user">
-      <img
-        v-if="hotFlow.user.user_header_img"
-        :src="hotFlow.user.user_header_img"
-      />
+    <div :class="$style.comments_root" v-if="hotFlow">
+      <img :src="header_img(hotFlow.user_header_img)" />
       <div :class="$style.comments_root_info">
         <span
-          v-if="hotFlow.user.screen_name"
+          v-if="hotFlow.screen_name"
           :class="$style.root_name"
-          v-html="hotFlow.user.screen_name"
+          v-html="hotFlow.screen_name"
         ></span>
         <span
           v-if="hotFlow.text"
@@ -29,43 +26,38 @@
             hotFlow.created_at | commentDate(hotFlow.created_at)
           }}</span>
           <div :class="$style.like_icon" v-if="hotFlow">
-            <i
-              :class="hotFlow.liked ? 'el-icon-star-on' : 'el-icon-star-off'"
-              v-html="hotFlow.like_count"
-              @click="isLikedFun()"
-            ></i>
             <i class="el-icon-edit" @click="comments()"></i>
           </div>
         </div>
       </div>
     </div>
-    <div :class="$style.comments_child" v-if="childHotFlow">
-      <ul v-if="childHotFlow && childHotFlow.length > 0">
-        <li v-for="(item, index) in childHotFlow" :key="index">
-          <div :class="$style.child_comment">
-            <img :src="item.user.user_header_img" />
-            <div :class="$style.comment_info">
-              <span
-                :class="$style.child_name"
-                v-html="item.user.screen_name"
-              ></span>
-              <span :class="$style.child_text" v-html="item.text"></span>
-              <div :class="$style.child_create_info">
-                <span>{{
-                  item.created_at | commentDate(item.created_at)
-                }}</span>
-                <div :class="$style.like_icon">
-                  <i
-                    :class="item.liked ? 'el-icon-star-on' : 'el-icon-star-off'"
-                    v-html="item.like_count"
-                    @click="childLikedFun(index)"
-                  ></i>
+    <div
+      v-infinite-scroll="loadMore"
+      infinite-scroll-disabled="busy"
+      infinite-scroll-distance="10"
+    >
+      <div :class="$style.comments_child" v-if="childHotFlow">
+        <ul v-if="childHotFlow && childHotFlow.length > 0">
+          <li v-for="(item, index) in childHotFlow" :key="index">
+            <div :class="$style.child_comment">
+              <img :src="header_img(item.user_header_img)" />
+              <div :class="$style.comment_info">
+                <span
+                  :class="$style.child_name"
+                  v-html="item.screen_name"
+                ></span>
+                <span :class="$style.child_text" v-html="item.text"></span>
+                <div :class="$style.child_create_info">
+                  <span>{{
+                    item.created_at | commentDate(item.created_at)
+                  }}</span>
                 </div>
               </div>
             </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+        <div class="loading" v-if="!busy">加载中...</div>
+      </div>
     </div>
   </div>
 </template>
@@ -190,7 +182,9 @@ export default {
   data() {
     return {
       hotFlow: {},
-      childHotFlow: []
+      childHotFlow: [],
+      busy: false,
+      page: 0
     };
   },
   computed: {
@@ -205,96 +199,78 @@ export default {
         return this.$route.query.c_id;
       }
       return "";
+    },
+    header_img() {
+      return function(item) {
+        if (item) {
+          return item;
+        }
+        return "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
+      };
     }
   },
   created() {
     this.initHotFlow();
-    this.initChildHotFlow();
   },
   methods: {
     // 初始化主楼评论
     initHotFlow() {
-      console.log(this.$route.params);
       this.axios
         .get("/api/hotflow", {
           params: { topic_id: this.topic_id, c_id: this.c_id }
         })
         .then(res => {
           if (res.data && res.data.ok === 1) {
-            this.hotFlow = res.data.data;
+            this.hotFlow = res.data.data.hotflow;
           }
         });
     },
+
+    loadMore() {
+      this.busy = true;
+      //把busy置位true，这次请求结束前不再执行
+      setTimeout(() => {
+        this.page++;
+        this.initChildHotFlow(true);
+        //调用获取数据接口，并且传入一个true，让axios方法指导是否需要拼接数组。
+      }, 500);
+    },
+
     // 初始化楼层评论
-    initChildHotFlow() {
+    initChildHotFlow(flag) {
       this.axios
         .get("/api/hotFlowChild", {
-          params: { topic_id: this.topic_id, root_id: this.c_id }
+          params: { root_id: this.c_id, page: this.page }
         })
         .then(res => {
           if (res.data && res.data.ok === 1) {
-            this.childHotFlow = res.data.data.childHotFlow;
+            if (flag) {
+              this.childHotFlow = this.childHotFlow.concat(
+                res.data.data.childHotFlow
+              );
+              if (res.data.count === 0) {
+                this.busy = true;
+              } else {
+                this.busy = false;
+              }
+            } else {
+              this.childHotFlow = res.data.data.childHotFlow;
+              this.busy = false;
+            }
           }
         });
     },
     back() {
       this.$router.back(-1);
     },
-    isLikedFun() {
-      if (this.hotFlow.liked) {
-        this.axios
-          .post("/api/destory", { c_id: this.c_id, type: "comment" })
-          .then(res => {
-            if (res.data.ok === 1) {
-              this.hotFlow.liked = false;
-              this.hotFlow.like_count--;
-            }
-          });
-      } else {
-        this.axios
-          .post("/api/update", { c_id: this.c_id, type: "comment" })
-          .then(res => {
-            if (res.data.ok === 1) {
-              this.hotFlow.liked = true;
-              this.hotFlow.like_count++;
-            }
-          });
-      }
-    },
-    childLikedFun(index) {
-      if (this.childHotFlow[index].liked) {
-        this.axios
-          .post("/api/destory", {
-            c_id: this.childHotFlow[index].cid,
-            type: "comment"
-          })
-          .then(res => {
-            if (res.data.ok === 1) {
-              this.childHotFlow[index].liked = false;
-              this.childHotFlow[index].like_count--;
-            }
-          });
-      } else {
-        this.axios
-          .post("/api/update", {
-            c_id: this.childHotFlow[index].cid,
-            type: "comment"
-          })
-          .then(res => {
-            if (res.data.ok === 1) {
-              this.childHotFlow[index].liked = false;
-              this.childHotFlow[index].like_count--;
-            }
-          });
-      }
-    },
+
     comments() {
       this.$router.push({
         path: `/compose/reply`,
         query: {
           topic_id: this.topic_id,
           c_id: this.c_id,
-          reply_name: this.hotFlow.user.screen_name
+          reply_name: this.hotFlow.screen_name
         }
       });
     }

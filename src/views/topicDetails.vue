@@ -8,9 +8,21 @@
 import topicDetails from "../components/details/topicDetails";
 export default {
   name: "topicDetails",
+  data() {
+    return {};
+  },
   components: {
     "topic-details": topicDetails
-  }
+  },
+  methods: {}
+  // beforeRouteLeave(to, from, next) {
+  //   if (to.path === "/" || to.path === "/compose/reply") {
+  //     from.meta.keepAlive = false;
+  //   } else {
+  //     from.meta.keepAlive = true;
+  //   }
+  //   next();
+  // }
 };
 </script>
 

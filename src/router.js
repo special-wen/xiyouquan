@@ -1,13 +1,20 @@
 import Vue from "vue";
 import Router from "vue-router";
-import index from "./views/index.vue";
-import login from "./views/login.vue";
-import edit from "./views/editTopic.vue";
-import profile from "./views/profile.vue";
-import details from "./views/topicDetails";
-import commentReply from "./components/comments/CommentReply";
-import shareCard from "./components/share/ShareCard";
-import moreComments from "./components/comments/moreComments";
+const index = () =>
+  import(/* webpackChunkName: "index"  */ "./views/index.vue");
+const login = () => import(/* webpackChunkName: "login" */ "./views/login.vue");
+const edit = () =>
+  import(/* webpackChunkName: "edit" */ "./views/editTopic.vue");
+const profile = () =>
+  import(/* webpackChunkName: "profile" */ "./views/profile.vue");
+const details = () =>
+  import(/* webpackChunkName: "details" */ "./views/topicDetails");
+const commentReply = () =>
+  import(/* webpackChunkName: "commentReply" */ "./components/comments/CommentReply");
+const shareCard = () =>
+  import(/* webpackChunkName: "shareCard" */ "./components/share/ShareCard");
+const moreComments = () =>
+  import(/* webpackChunkName: "moreComments" */ "./components/comments/moreComments");
 Vue.use(Router);
 
 export default new Router({
@@ -17,10 +24,10 @@ export default new Router({
     {
       path: "/",
       name: "index",
-      component: index,
-      meta: {
-        keepAlive: true
-      }
+      component: index
+      // meta: {
+      //   keepAlive: true
+      // }
     },
     {
       path: "/login",
@@ -33,50 +40,61 @@ export default new Router({
     {
       path: "/edit",
       name: "edit",
-      component: edit,
-      meta: {
-        keepAlive: false
-      }
+      component: edit
+      // meta: {
+      //   keepAlive: false
+      // }
     },
     {
       path: "/topic/details/:topic_id",
       name: "details",
-      component: details,
-      meta: {
-        keepAlive: true
-      }
+      component: details
+      // meta: {
+      //   keepAlive: true
+      // }
     },
     {
       path: "/profile/:user_id",
       name: "profile",
-      component: profile,
-      meta: {
-        keepAlive: false
-      }
+      component: profile
+      // meta: {
+      //   keepAlive: false
+      // }
     },
     {
       path: "/compose/reply",
       name: "commentReply",
-      component: commentReply,
-      meta: {
-        keepAlive: false
-      }
+      component: commentReply
+      // meta: {
+      //   keepAlive: false
+      // }
     },
     {
       path: "/compose/share",
       name: "shareCard",
-      component: shareCard,
-      meta: {
-        keepAlive: false
-      }
+      component: shareCard
+      // meta: {
+      //   keepAlive: false
+      // }
     },
     {
       path: "/compose/comments",
       name: "moreComments",
-      component: moreComments,
-      meta: {
-        keepAlive: true
-      }
+      component: moreComments
+      // meta: {
+      //   keepAlive: true
+      // }
     }
   ]
+  // scrollBehavior(to, from, savedPosition) {
+  //   if (savedPosition) {
+  //     console.log(savedPosition);
+  //     return savedPosition;
+  //   } else {
+  //     return {
+  //       x: 0,
+  //       y: 0
+  //     };
+  //   }
+  // }
 });
