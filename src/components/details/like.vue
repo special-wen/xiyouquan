@@ -86,7 +86,7 @@ export default {
         if (item) {
           return item;
         }
-        return "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
+        return "http://127.0.0.1/img/header.jpg";
       };
     }
   },

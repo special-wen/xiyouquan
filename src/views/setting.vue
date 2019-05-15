@@ -220,8 +220,7 @@ export default {
             if (this.userInfo.user_header_img) {
               this.url = this.userInfo.user_header_img;
             } else {
-              this.url =
-                "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
+              this.url = "http://127.0.0.1/img/header.jpg";
             }
           }
         });

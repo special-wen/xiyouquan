@@ -16,7 +16,12 @@
       <el-button plain v-if="isme" @click="setting">编辑个人资料</el-button>
     </div>
     <div :class="$style.topic_card">
-      <div v-if="topic.length === 0">快来发布第一篇话题吧</div>
+      <div :class="$style.noTopic" v-if="topic.length === 0 && isme">
+        快来发布第一篇话题吧
+      </div>
+      <div :class="$style.noTopic" v-if="topic.length === 0 && !isme">
+        ta还没有发布过一篇话题
+      </div>
       <div
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="busy"
@@ -74,6 +79,9 @@
 .info_list {
   width: 715px;
   margin: 10px 15px;
+}
+.noTopic {
+  margin-left: 13px;
 }
 .info_icon {
   width: 720px;
@@ -201,7 +209,7 @@ export default {
         if (item) {
           return item;
         }
-        return "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
+        return "http://127.0.0.1/img/header.jpg";
       };
     }
   },

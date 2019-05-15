@@ -77,7 +77,7 @@ export default {
       if (this.userInfo && this.userInfo.user_header_img) {
         return this.userInfo.user_header_img;
       }
-      return "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
+      return "http://127.0.0.1/img/header.jpg";
     }
   },
   created() {
