@@ -1,7 +1,7 @@
 <template>
   <div class="likeCard">
     <!-- 没有数据 -->
-    <div v-if="likeList.length === 0" class="noLikeList">
+    <div v-if="likeList.length === 0 && !request" class="noLikeList">
       <span>还没有人来喜欢过这个话题</span>
     </div>
     <div
@@ -19,22 +19,30 @@
           </div>
         </li>
       </ul>
+      <div
+        class="loading"
+        v-loading="!busy || request"
+        element-loading-spinner="el-icon-loading"
+      ></div>
     </div>
   </div>
 </template>
 <style>
+.loading {
+  margin-top: 30px;
+}
+.likeCard {
+  min-height: 305px;
+  background: #ffffff;
+}
 .noLikeList {
   background: #ffffff;
   margin-top: 10px;
-  min-height: 135px;
   padding-left: 13px;
   padding-top: 13px;
   color: #697480;
 }
-.likeCard {
-  background: #ffffff;
-  min-height: 175px;
-}
+
 .like_card {
   height: 40px;
   display: flex;
@@ -65,7 +73,8 @@ export default {
     return {
       likeList: [],
       busy: false,
-      page: 0
+      page: 0,
+      request: true
     };
   },
   computed: {
@@ -93,11 +102,13 @@ export default {
       }, 500);
     },
     getLikeList(flag) {
+      this.request = true;
       this.axios
         .get("/api/like", {
           params: { topic_id: this.topic_id, page: this.page }
         })
         .then(res => {
+          this.request = false;
           if (res.data.ok === 1) {
             if (flag) {
               this.likeList = this.likeList.concat(res.data.data.data);

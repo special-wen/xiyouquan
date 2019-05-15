@@ -41,7 +41,7 @@
               v-if="item.study_topic.pics && item.study_topic.pics.length > 0"
             >
               <li v-for="(pic, index) in item.study_topic.pics" :key="index">
-                <img class="topic_img" :src="pic" />
+                <img class="topic_img" :src="pic" v-if="pic !== ''" />
               </li>
             </ul>
           </div>
@@ -63,11 +63,11 @@
     </ul>
     <div
       class="loading"
-      v-loading="!busy || !studyList.length"
+      v-loading="!busy || request"
       element-loading-spinner="el-icon-loading"
     ></div>
     <!-- <div class="loading" v-if="!busy || !studyList.length">加载中...</div> -->
-    <!-- <div v-if="studyList.length === 0">还没有与此相关的话题</div> -->
+    <div v-if="studyList.length === 0 && !request">还没有与此相关的话题</div>
   </div>
 </template>
 <script>
@@ -78,7 +78,8 @@ export default {
     return {
       studyList: [],
       busy: false,
-      page: 0
+      page: 0,
+      request: true
     };
   },
   props: ["isLogin"],
@@ -115,7 +116,9 @@ export default {
       var param = {
         page: this.page
       };
+      this.request = true;
       this.axios.get("/api/studyTopic", { params: param }).then(res => {
+        this.request = false;
         if (res.data && res.data.ok && res.data.ok === 1) {
           if (flag) {
             this.studyList = this.studyList.concat(res.data.data.card);

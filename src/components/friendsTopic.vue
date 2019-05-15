@@ -43,7 +43,7 @@
               "
             >
               <li v-for="(pic, index) in item.friends_topic.pics" :key="index">
-                <img class="topic_img" :src="pic" />
+                <img class="topic_img" :src="pic" v-if="pic !== ''" />
               </li>
             </ul>
           </div>
@@ -63,12 +63,12 @@
         </div>
       </li>
     </ul>
-    <!-- <div class="loading" v-if="!busy || !foodList.length">加载中...</div> -->
     <div
       class="loading"
-      v-loading="!busy || !friendsList.length"
+      v-loading="!busy || request"
       element-loading-spinner="el-icon-loading"
     ></div>
+    <div v-if="!request && friendsList.length === 0"></div>
   </div>
 </template>
 <script>
@@ -79,7 +79,8 @@ export default {
     return {
       friendsList: [],
       busy: false,
-      page: 0
+      page: 0,
+      request: true
     };
   },
   props: ["isLogin"],
@@ -116,7 +117,9 @@ export default {
       var param = {
         page: this.page
       };
+      this.request = true;
       this.axios.get("/api/friendsTopic", { params: param }).then(res => {
+        this.request = false;
         if (res.data && res.data.ok && res.data.ok === 1) {
           if (flag) {
             this.friendsList = this.friendsList.concat(res.data.data.card);

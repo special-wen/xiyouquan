@@ -9,6 +9,8 @@ const profile = () =>
   import(/* webpackChunkName: "profile" */ "./views/profile.vue");
 const details = () =>
   import(/* webpackChunkName: "details" */ "./views/topicDetails");
+const setting = () =>
+  import(/* webpackChunkName: "details" */ "./views/setting");
 const commentReply = () =>
   import(/* webpackChunkName: "commentReply" */ "./components/comments/CommentReply");
 const shareCard = () =>
@@ -84,6 +86,11 @@ export default new Router({
       // meta: {
       //   keepAlive: true
       // }
+    },
+    {
+      path: "/profile/setting/:uid",
+      name: "setting",
+      component: setting
     }
   ]
   // scrollBehavior(to, from, savedPosition) {

@@ -40,7 +40,7 @@
               v-if="item.hot_topic.pics && item.hot_topic.pics.length > 0"
             >
               <li v-for="(pic, index) in item.hot_topic.pics" :key="index">
-                <img class="topic_img" :src="pic" />
+                <img class="topic_img" :src="pic" v-if="pic !== ''" />
               </li>
             </ul>
           </div>

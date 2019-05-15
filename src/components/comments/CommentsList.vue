@@ -1,8 +1,8 @@
 <template>
   <div class="commentCard">
-    <!-- <div v-if="commentsInfo.length === 0" class="noComments"> -->
-    <!-- <span>没有评论，快来占沙发吧～</span> -->
-    <!-- </div> -->
+    <div v-if="commentsInfo.length === 0 && !request" class="noComments">
+      <span>没有评论，快来占沙发吧～</span>
+    </div>
     <div
       v-infinite-scroll="loadMore"
       infinite-scroll-disabled="busy"
@@ -132,7 +132,7 @@ export default {
           params: { topic_id: this.topic_id, page: this.page }
         })
         .then(res => {
-          // this.request = false;
+          this.request = false;
           if (res.data.ok && res.data.ok === 1) {
             if (flag) {
               this.commentsInfo = this.commentsInfo.concat(
@@ -178,13 +178,40 @@ export default {
 };
 </script>
 <style>
+.loading {
+  margin-top: 30px;
+}
+.commentCard {
+  min-height: 305px;
+  background: #ffffff;
+}
 .noComments {
   background: #ffffff;
   margin-top: 10px;
-  min-height: 135px;
   padding-left: 13px;
   padding-top: 13px;
   color: #697480;
+}
+.topic_img {
+  width: 127px;
+  height: 127px;
+}
+.img_totle {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  padding-top: 10px;
+}
+.topic_img {
+  width: 127px;
+  height: 127px;
+  margin: 0px 2px;
+}
+.img_type_1 {
+  width: 400px;
+}
+.img_type_2 {
+  width: 300px;
 }
 li {
   list-style: none;

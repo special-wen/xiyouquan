@@ -41,7 +41,7 @@
           "
         >
           <li v-for="(item, index) in topicDetails.hot_topic.pics" :key="index">
-            <img class="topic_img" :src="item" />
+            <img class="topic_img" :src="item" v-if="item !== ''" />
           </li>
         </ul>
       </div>
@@ -194,6 +194,35 @@ export default {
 };
 </script>
 <style>
+.img_totle {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  padding-top: 10px;
+}
+.topic_img {
+  width: 127px;
+  height: 127px;
+  margin: 0px 2px;
+}
+.img_type_1 {
+  width: 400px;
+}
+.img_type_2 {
+  width: 300px;
+}
+.user_info {
+  height: 50px;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  align-items: center;
+}
+.user_info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50% 50%;
+}
 .details_list {
   background: #ffffff;
   padding: 0 13px;
@@ -226,6 +255,7 @@ export default {
 }
 .addComment {
   height: 54px;
+  position: fixed;
 }
 .comment_input {
   height: 54px;

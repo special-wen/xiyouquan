@@ -2,9 +2,20 @@
   <div class="container_index">
     <div class="navbar">
       <div class="navbar_top">
-        <img class="header_img" :src="user_header" />
+        <img
+          v-if="isLogin"
+          @click="profile"
+          class="header_img"
+          :src="user_header"
+        />
+        <img
+          class="header_img"
+          v-if="!isLogin"
+          src="http://127.0.0.1/img/usericon.png"
+        />
+        <!-- <i v-if="!isLogin" class="el-icon-s-cooperation"></i> -->
         <div class="navbar_bottom">
-          <span>西柚圈</span>
+          <span class="logo">西柚圈</span>
           <ul class="navbar_list">
             <li
               v-for="(item, index) in navbar"
@@ -20,7 +31,9 @@
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-input> -->
         <!-- <i class="el-icon-message"></i> -->
-        <i class="el-icon-edit" @click="editTopic()"></i>
+        <i class="el-icon-edit edit" @click="editTopic()"></i>
+        <!-- <i class="el-icon-switch-button"></i> -->
+        <i class="el-icon-circle-close logout" @click="logout"></i>
       </div>
     </div>
     <hot-topic v-if="clickIndex === 0" :isLogin="isLogin"></hot-topic>
@@ -104,11 +117,37 @@ export default {
           this.isLogin = false;
         }
       });
+    },
+    profile() {
+      if (this.isLogin) {
+        const user_id = this.userInfo.uid;
+        this.$router.push({
+          path: `/profile/${user_id}`
+        });
+      }
+    },
+    logout() {
+      //如果已经登陆，就退出登陆
+      if (this.isLogin) {
+        this.axios.post("/api/logout").then(res => {
+          if (res.data.ok === 1) {
+            this.$alert("已退出登陆", "", {
+              confirmButtonText: "确定",
+              callback: () => {
+                window.location.reload();
+              }
+            });
+          }
+        });
+      }
     }
   }
 };
 </script>
 <style>
+.logo {
+  font-size: 20px;
+}
 .container_index {
   width: 750px;
   background: #ffffff;
@@ -130,10 +169,10 @@ export default {
   display: -webkit-flex;
   align-items: center;
 }
-.navbar_bottom span {
+.navbar_list span {
   color: #a5adb5;
   margin-left: 20px;
-  font-size: 20px;
+  font-size: 16px;
 }
 .header_img {
   width: 32.5px;
@@ -141,9 +180,9 @@ export default {
   border-radius: 50% 50%;
   margin-right: 13px;
 }
-.el-input {
+/* .el-input {
   width: 587.5px !important;
-}
+} */
 .el-icon-message {
   color: #282f3c;
   font-size: 30px;
@@ -178,5 +217,15 @@ export default {
   position: fixed;
   bottom: 10px;
   left: 494px;
+}
+.edit {
+  font-size: 16px !important;
+  margin-left: 30px;
+  margin-right: 10px;
+  color: #333 !important;
+}
+.logout {
+  font-size: 16px !important;
+  color: #333 !important;
 }
 </style>

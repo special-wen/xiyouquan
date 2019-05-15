@@ -24,38 +24,39 @@
       >
         <ul v-if="topic && topic.length > 0">
           <li
-            class="list"
+            :class="$style.list"
             v-for="(item, index) in topic"
             :key="index"
             @click="goDetailed(index)"
           >
-            <div class="info_list">
-              <div class="user_info">
+            <div :class="$style.info_list">
+              <div :class="$style.user_info">
                 <img :src="header_img(item.user_header_img)" />
-                <div class="name_date">
-                  <p class="user_name" v-html="item.screen_name"></p>
-                  <p class="date">
+                <div :class="$style.name_date">
+                  <p :class="$style.user_name" v-html="item.screen_name"></p>
+                  <p :class="$style.date">
                     {{ item.created_at | commentDate(item.created_at) }}
                   </p>
                 </div>
               </div>
-              <div class="hot_content">
+              <div :class="$style.hot_content">
                 <p v-html="item.text"></p>
                 <ul
-                  class="img_totle"
                   :class="{
-                    img_type_1: item.pics.length <= 3 || item.pics.length >= 5,
-                    img_type_2: item.pics.length === 4
+                    [$style.img_totle]: true,
+                    [$style.img_type_1]:
+                      item.pics.length <= 3 || item.pics.length >= 5,
+                    [$style.img_type_2]: item.pics.length === 4
                   }"
                   v-if="item.pics && item.pics.length > 0"
                 >
                   <li v-for="(pic, index) in item.pics" :key="index">
-                    <img class="topic_img" :src="pic" />
+                    <img :class="$style.topic_img" :src="pic" />
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="info_icon">
+            <div :class="$style.info_icon">
               <i class="el-icon-edit-outline" v-html="item.comment_count"></i>
               <i
                 :class="[item.like ? 'el-icon-star-on' : 'el-icon-star-off']"
@@ -70,6 +71,61 @@
   </div>
 </template>
 <style module>
+.info_list {
+  width: 715px;
+  margin: 10px 15px;
+}
+.info_icon {
+  width: 720px;
+  height: 22px;
+  margin: 0 1.2rem;
+  padding: 0rem 0.375rem 1rem 0;
+}
+.info_icon i {
+  margin-right: 60px;
+  font-size: 12px;
+  color: #939393;
+}
+.topic_img {
+  width: 127px;
+  height: 127px;
+  margin: 0px 2px;
+}
+.img_type_1 {
+  width: 400px;
+}
+.img_type_2 {
+  width: 300px;
+}
+.img_totle {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+  padding-top: 10px;
+}
+.user_info .date {
+  color: #939393;
+  font-size: 0.6875rem;
+}
+.name_date {
+  margin-left: 10px;
+}
+.list {
+  width: 750px;
+  border-bottom: 1px solid #a5adb5;
+}
+.user_info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50% 50%;
+}
+.user_info {
+  height: 50px;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  align-items: center;
+}
 .profile {
   width: 750px;
   min-height: 511.2px;
@@ -90,14 +146,14 @@
   color: #333 !important;
 }
 .user_card {
-  height: 68px;
+  height: 50px;
   padding: 0rem 0.9375rem 1rem;
   display: flex;
   display: -webkit-flex;
   align-items: center;
 }
 .user_card img {
-  widows: 50px;
+  width: 50px;
   height: 50px;
   border-radius: 50%;
 }
@@ -135,7 +191,7 @@ export default {
       return "";
     },
     isme() {
-      if (this.uid === this.cur_uid) {
+      if (parseInt(this.uid) === parseInt(this.cur_uid)) {
         return true;
       }
       return false;
@@ -185,7 +241,10 @@ export default {
     },
     //进入修改用户信息页面
     setting() {
-      console.log(this.uid, this.cur_uid);
+      // console.log(this.uid, this.cur_uid);
+      this.$router.push({
+        path: `/profile/setting/${this.uid}`
+      });
     },
     loadMore() {
       this.busy = true;

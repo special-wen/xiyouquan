@@ -40,7 +40,7 @@
               v-if="item.food_topic.pics && item.food_topic.pics.length > 0"
             >
               <li v-for="(pic, index) in item.food_topic.pics" :key="index">
-                <img class="topic_img" :src="pic" />
+                <img class="topic_img" :src="pic" v-if="pic !== ''" />
               </li>
             </ul>
           </div>
@@ -60,12 +60,12 @@
         </div>
       </li>
     </ul>
-    <!-- <div class="loading" v-if="!busy || !foodList.length">加载中...</div> -->
     <div
       class="loading"
-      v-loading="!busy || !foodList.length"
+      v-loading="!busy || request"
       element-loading-spinner="el-icon-loading"
     ></div>
+    <div v-if="!request && foodList.length === 0"></div>
   </div>
 </template>
 <script>
@@ -76,7 +76,8 @@ export default {
     return {
       foodList: [],
       busy: false,
-      page: 0
+      page: 0,
+      request: true
     };
   },
   props: ["isLogin"],
@@ -113,7 +114,9 @@ export default {
       var param = {
         page: this.page
       };
+      this.request = true;
       this.axios.get("/api/foodTopic", { params: param }).then(res => {
+        this.request = false;
         if (res.data && res.data.ok && res.data.ok === 1) {
           if (flag) {
             this.foodList = this.foodList.concat(res.data.data.card);
@@ -202,6 +205,9 @@ export default {
 };
 </script>
 <style>
+.loading {
+  margin-top: 30px;
+}
 .list {
   width: 750px;
   border-bottom: 1px solid #a5adb5;

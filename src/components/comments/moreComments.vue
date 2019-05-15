@@ -1,14 +1,14 @@
 <template>
   <div :class="$style.comments_flow">
-    <div :class="$style.comments_flow_title" v-if="hotFlow">
+    <div :class="$style.comments_flow_title" v-if="hotFlow && hasHotFlow">
       <i class="el-icon-arrow-left" :class="$style.back" @click="back"></i>
       <span
         :class="$style.title"
-        v-if="childHotFlow.length > 0"
+        v-if="hotFlow && childHotFlow"
         v-html="childHotFlow.length + `条回复`"
       ></span>
     </div>
-    <div :class="$style.comments_root" v-if="hotFlow">
+    <div :class="$style.comments_root" v-if="hotFlow && hasHotFlow">
       <img :src="header_img(hotFlow.user_header_img)" />
       <div :class="$style.comments_root_info">
         <span
@@ -36,8 +36,8 @@
       infinite-scroll-disabled="busy"
       infinite-scroll-distance="10"
     >
-      <div :class="$style.comments_child" v-if="childHotFlow">
-        <ul v-if="childHotFlow && childHotFlow.length > 0">
+      <div :class="$style.comments_child">
+        <ul>
           <li v-for="(item, index) in childHotFlow" :key="index">
             <div :class="$style.child_comment">
               <img :src="header_img(item.user_header_img)" />
@@ -56,12 +56,25 @@
             </div>
           </li>
         </ul>
-        <div class="loading" v-if="!busy">加载中...</div>
+        <div v-if="childHotFlow.length === 0 && !request" class="noLikeList">
+          <span>还没有人回复过这条评论</span>
+        </div>
+        <div
+          :class="$style.loading"
+          v-loading="!busy || request"
+          element-loading-spinner="el-icon-loading"
+        ></div>
       </div>
+    </div>
+    <div v-if="!hasHotFlow">
+      <span>还没有对应的评论</span>
     </div>
   </div>
 </template>
 <style module>
+.loading {
+  margin-top: 30px;
+}
 .comments_flow {
   width: 750px;
   position: fixed;
@@ -184,7 +197,8 @@ export default {
       hotFlow: {},
       childHotFlow: [],
       busy: false,
-      page: 0
+      page: 0,
+      request: true
     };
   },
   computed: {
@@ -207,6 +221,12 @@ export default {
         }
         return "http://avatars3.githubusercontent.com/u/27426408?s=40&v=4";
       };
+    },
+    hasHotFlow() {
+      if (this.hotFlow && this.hotFlow.cid) {
+        return true;
+      }
+      return false;
     }
   },
   created() {
@@ -222,11 +242,13 @@ export default {
         .then(res => {
           if (res.data && res.data.ok === 1) {
             this.hotFlow = res.data.data.hotflow;
+            console.log(this.hotFlow);
           }
         });
     },
 
     loadMore() {
+      // if (this.hasHotFlow) {
       this.busy = true;
       //把busy置位true，这次请求结束前不再执行
       setTimeout(() => {
@@ -234,31 +256,36 @@ export default {
         this.initChildHotFlow(true);
         //调用获取数据接口，并且传入一个true，让axios方法指导是否需要拼接数组。
       }, 500);
+      // }
     },
 
     // 初始化楼层评论
     initChildHotFlow(flag) {
-      this.axios
-        .get("/api/hotFlowChild", {
-          params: { root_id: this.c_id, page: this.page }
-        })
-        .then(res => {
-          if (res.data && res.data.ok === 1) {
-            if (flag) {
-              this.childHotFlow = this.childHotFlow.concat(
-                res.data.data.childHotFlow
-              );
-              if (res.data.count === 0) {
-                this.busy = true;
+      if (this.hasHotFlow) {
+        this.request = true;
+        this.axios
+          .get("/api/hotFlowChild", {
+            params: { root_id: this.c_id, page: this.page }
+          })
+          .then(res => {
+            this.request = false;
+            if (res.data && res.data.ok === 1) {
+              if (flag) {
+                this.childHotFlow = this.childHotFlow.concat(
+                  res.data.data.childHotFlow
+                );
+                if (res.data.count === 0) {
+                  this.busy = true;
+                } else {
+                  this.busy = false;
+                }
               } else {
+                this.childHotFlow = res.data.data.childHotFlow;
                 this.busy = false;
               }
-            } else {
-              this.childHotFlow = res.data.data.childHotFlow;
-              this.busy = false;
             }
-          }
-        });
+          });
+      }
     },
     back() {
       this.$router.back(-1);
