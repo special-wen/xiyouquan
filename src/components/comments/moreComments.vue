@@ -9,7 +9,7 @@
       ></span>
     </div>
     <div :class="$style.comments_root" v-if="hotFlow && hasHotFlow">
-      <img :src="header_img(hotFlow.user_header_img)" />
+      <img :src="header_img(hotFlow.user_header_img)" @click="profilePre" />
       <div :class="$style.comments_root_info">
         <span
           v-if="hotFlow.screen_name"
@@ -40,7 +40,10 @@
         <ul>
           <li v-for="(item, index) in childHotFlow" :key="index">
             <div :class="$style.child_comment">
-              <img :src="header_img(item.user_header_img)" />
+              <img
+                :src="header_img(item.user_header_img)"
+                @click="profile(index)"
+              />
               <div :class="$style.comment_info">
                 <span
                   :class="$style.child_name"
@@ -299,6 +302,19 @@ export default {
           c_id: this.c_id,
           reply_name: this.hotFlow.screen_name
         }
+      });
+    },
+    // 别人的主页
+    profile(index) {
+      const user_id = this.childHotFlow[index].uid;
+      this.$router.push({
+        path: `/profile/${user_id}`
+      });
+    },
+    profilePre() {
+      const user_id = this.hotFlow.uid;
+      this.$router.push({
+        path: `/profile/${user_id}`
       });
     }
   }

@@ -7,7 +7,7 @@
     </div>
     <div class="details_list">
       <div class="user_info" v-if="topicDetails.user_info">
-        <img v-if="topicDetails.user_info" :src="header_img" />
+        <img v-if="topicDetails.user_info" @click="profile" :src="header_img" />
         <div class="name_date">
           <p
             class="user_name"
@@ -189,11 +189,21 @@ export default {
           confirmButtonText: "确定"
         });
       }
+    },
+    profile() {
+      // topicDetails
+      const user_id = this.topicDetails.user_info.uid;
+      this.$router.push({
+        path: `/profile/${user_id}`
+      });
     }
   }
 };
 </script>
 <style>
+.name_date {
+  margin-left: 13px;
+}
 .img_totle {
   display: flex;
   display: -webkit-flex;

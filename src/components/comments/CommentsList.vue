@@ -18,6 +18,7 @@
             <div class="img">
               <img
                 class="comments_image"
+                @click="profile(index)"
                 :src="header_img(item.user_info.user_header_img)"
               />
             </div>
@@ -172,6 +173,13 @@ export default {
           topic_id: this.topic_id,
           c_id: item.comment.cid
         }
+      });
+    },
+    // 别人的主页
+    profile(index) {
+      const user_id = this.commentsInfo[index].user_info.uid;
+      this.$router.push({
+        path: `/profile/${user_id}`
       });
     }
   }

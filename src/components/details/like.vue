@@ -12,7 +12,10 @@
       <ul>
         <li v-for="(item, index) in likeList" :key="index">
           <div class="like_card">
-            <img :src="header_img(item.user_header_img)" />
+            <img
+              :src="header_img(item.user_header_img)"
+              @click="profile(index)"
+            />
             <div class="like_info">
               <span class="like_name" v-html="item.screen_name"></span>
             </div>
@@ -124,6 +127,13 @@ export default {
             }
           }
         });
+    },
+    // 别人的主页
+    profile(index) {
+      const user_id = this.likeList[index].uid;
+      this.$router.push({
+        path: `/profile/${user_id}`
+      });
     }
   }
 };

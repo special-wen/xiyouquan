@@ -56,9 +56,10 @@
     </div>
     <div class="sign_forget">
       <span>
-        <a @click="sign" v-if="type === 'login'">注册账号</a>
-        <a @click="login" v-if="type === 'sign'">登录</a>|
-        <a @click="forget">忘记密码</a>
+        <a @click="sign">注册账号</a>
+        <span> | </span>
+        <a @click="login">登录</a>
+        <!-- <a @click="forget">忘记密码</a> -->
       </span>
     </div>
   </div>
@@ -203,7 +204,12 @@ export default {
   width: 750px;
   background: #ffffff;
   margin: 0 auto;
-  height: 615px;
+  /* height: 615px; */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .close_icon {
   padding: 18.75px;
@@ -235,7 +241,7 @@ export default {
   margin: 10px 0;
 }
 .login_btn {
-  margin-top: 60px;
+  margin-top: 30px;
 }
 .login_btn button {
   width: 500px;
