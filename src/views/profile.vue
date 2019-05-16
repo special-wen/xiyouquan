@@ -43,6 +43,15 @@
                     {{ item.created_at | commentDate(item.created_at) }}
                   </p>
                 </div>
+                <div :class="$style.delete_topic">
+                  <el-button
+                    plain
+                    size="small"
+                    v-if="isme"
+                    @click="deleteTopic(index, $event)"
+                    >删除这条话题</el-button
+                  >
+                </div>
               </div>
               <div :class="$style.hot_content">
                 <p v-html="item.text"></p>
@@ -56,7 +65,7 @@
                   v-if="item.pics && item.pics.length > 0"
                 >
                   <li v-for="(pic, index) in item.pics" :key="index">
-                    <img :class="$style.topic_img" :src="pic" />
+                    <img :class="$style.topic_img" :src="pic" v-if="pic" />
                   </li>
                 </ul>
               </div>
@@ -76,6 +85,9 @@
   </div>
 </template>
 <style module>
+.delete_topic {
+  margin-left: 481px;
+}
 .info_list {
   width: 715px;
   margin: 10px 15px;
@@ -235,7 +247,6 @@ export default {
           }
         });
     },
-    initTopicCardInfo() {},
     // 获取登陆信息
     getLoginUserInfo() {
       this.axios.get("/api/config").then(res => {
@@ -339,6 +350,26 @@ export default {
             });
         }
       }
+    },
+    deleteTopic(index, ev) {
+      ev.cancelBubble = true;
+      const topic_id = this.topic[index].topic_id;
+      this.axios
+        .post("/api/destory", {
+          uid: this.uid,
+          topic_id: topic_id,
+          attitude: "topic"
+        })
+        .then(res => {
+          if (res.data.ok === 1) {
+            this.$alert("删除成功", "", {
+              confirmButtonText: "确定",
+              callback: () => {
+                location.reload();
+              }
+            });
+          }
+        });
     }
   }
 };
