@@ -46,7 +46,3 @@
     - router.js:路由配置
   - vue.config.js: 各种配置，如各种请求api
 
-### package.json中的name记得换成你自己的文件名哈！！！
-### public/index.html中的title记得也要换成你自己的文件名哈！！！
-### 我配置了eslint，你要改我vue记得书写规范，如果你不想要我文件中配置的elint的话,自己查下怎么关闭！！！
-
